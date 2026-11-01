@@ -165,7 +165,7 @@ export default function Hero() {
               title="Official Dispatch Stamp • Click for tactile stamp thud"
             >
               <img 
-                src="/assets/stamp_shreeram.svg" 
+                src="/assets/stamp_shreeram_official.svg?v=2" 
                 alt="Shreeram S Hegde - Official Postage Stamp" 
                 className="w-full max-w-[210px] drop-shadow-[4px_6px_0px_#1d1d1b]"
               />
@@ -205,7 +205,7 @@ export default function Hero() {
                 SIGNATURE:
               </span>
               <img
-                src="/assets/shreeram_signature_blue.png"
+                src="/assets/shreeram_signature_blue.png?v=2"
                 alt="Shreeram S Hegde Authentic Signature"
                 className="h-9 object-contain drop-shadow-sm"
               />

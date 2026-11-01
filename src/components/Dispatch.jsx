@@ -240,7 +240,7 @@ export function Dispatch() {
                   <div className="font-mono text-[11px] font-bold text-[#1d1d1b]">{CONFIG.AUTHOR.name}</div>
                 </div>
                 <img
-                  src="/assets/shreeram_signature_blue.png"
+                  src="/assets/shreeram_signature_blue.png?v=2"
                   alt="Shreeram S Hegde Authentic Signature"
                   className="h-10 object-contain drop-shadow-sm"
                 />

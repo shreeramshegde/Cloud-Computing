@@ -36,7 +36,7 @@ export function Footer() {
                 {CONFIG.AUTHOR.name}
               </h3>
               <img
-                src="/assets/shreeram_signature_blue.png"
+                src="/assets/shreeram_signature_blue.png?v=2"
                 alt="Shreeram S Hegde Authentic Signature"
                 className="h-10 object-contain drop-shadow-sm"
               />

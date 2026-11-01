@@ -48,7 +48,11 @@ jobs:
       - name: Deploy Static Assets to Amazon S3
         run: |
           echo "Syncing assets to S3 bucket ${{ env.S3_BUCKET_NAME }}..."
-          aws s3 sync dist/ s3://${{ env.S3_BUCKET_NAME }} --delete --cache-control "max-age=31536000,public" --exclude "index.html"
+          # Deploy Vite hashed bundles (JS/CSS) with 1-year cache
+          aws s3 sync dist/ s3://${{ env.S3_BUCKET_NAME }} --delete --cache-control "max-age=31536000,public" --exclude "index.html" --exclude "*.svg" --exclude "*.png" --exclude "*.jpg"
+          # Deploy image and SVG assets with no-cache so updates propagate immediately without stale browser cache
+          aws s3 sync dist/ s3://${{ env.S3_BUCKET_NAME }} --exclude "*" --include "*.svg" --include "*.png" --include "*.jpg" --cache-control "max-age=0,no-cache,no-store,must-revalidate"
+          # Deploy index.html with no-cache
           aws s3 cp dist/index.html s3://${{ env.S3_BUCKET_NAME }}/index.html --cache-control "max-age=0,no-cache,no-store,must-revalidate"
           echo "S3 deployment complete."
 
