@@ -55,37 +55,35 @@ version: 0.2
 phases:
   install:
     runtime-versions:
-      python: 3.12
+      nodejs: 20
     commands:
-      - echo "Installing deployment dependencies..."
-      - pip install --upgrade awscli
+      - echo "Installing deployment and Node.js dependencies..."
+      - npm ci
 
   pre_build:
     commands:
       - echo "===> Stage: Pre-Build Validation"
-      - echo "Checking website structure..."
-      - test -f website/index.html || { echo "website/index.html not found!"; exit 1; }
-      - test -f website/style.css || { echo "website/style.css not found!"; exit 1; }
-      - test -f website/app.js || { echo "website/app.js not found!"; exit 1; }
-      - echo "All required assets verified successfully."
+      - test -f package.json || { echo "ERROR: package.json not found!"; exit 1; }
+      - test -f src/main.jsx || { echo "ERROR: src/main.jsx not found!"; exit 1; }
 
   build:
     commands:
-      - echo "===> Stage: Build & Asset Synchronization"
+      - echo "===> Stage: React Production Build"
+      - npm run build
+      - test -f dist/index.html || { echo "ERROR: dist/index.html was not generated!"; exit 1; }
+      - echo "===> Stage: S3 Asset Synchronization"
       - echo "Target S3 Bucket: $S3_BUCKET_NAME"
-      - echo "Uploading static assets to Amazon S3..."
-      - aws s3 sync ./website s3://$S3_BUCKET_NAME --delete --cache-control "max-age=31536000,public" --exclude "index.html"
-      - aws s3 cp ./website/index.html s3://$S3_BUCKET_NAME/index.html --cache-control "max-age=0,no-cache,no-store,must-revalidate"
+      - aws s3 sync dist/ s3://$S3_BUCKET_NAME --delete --cache-control "max-age=31536000,public" --exclude "index.html"
+      - aws s3 cp dist/index.html s3://$S3_BUCKET_NAME/index.html --cache-control "max-age=0,no-cache,no-store,must-revalidate"
       - echo "S3 asset synchronization complete."
 
   post_build:
     commands:
-      - echo "===> Stage: Post-Build Cache Invalidation"
+      - echo "===> Stage: CloudFront Edge Cache Invalidation"
       - echo "CloudFront Distribution ID: $CLOUDFRONT_DIST_ID"
-      - echo "Triggering CloudFront edge cache invalidation..."
       - INVALIDATION_ID=$(aws cloudfront create-invalidation --distribution-id $CLOUDFRONT_DIST_ID --paths "/*" --query 'Invalidation.Id' --output text)
       - echo "CloudFront invalidation submitted with ID: $INVALIDATION_ID"
-      - echo "===> Deployment Completed Successfully!"
+      - echo "===> Continuous Deployment Pipeline Execution Succeeded!"
 ```
 
 ### Why the custom cache-control headers above matter:

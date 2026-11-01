@@ -10,6 +10,7 @@ Thumbs.db
 
 # Node / Python / Dependency files
 node_modules/
+dist/
 __pycache__/
 *.pyc
 .env

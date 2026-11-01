@@ -9,7 +9,7 @@
 ## 📋 Implementation Roadmap Overview
 
 The deployment is executed in 8 logical phases:
-1. **Phase 1**: Local Portfolio Asset Preparation (`website/` directory).
+1. **Phase 1**: Local React Portfolio Application Preparation & Build (`npm run build`).
 2. **Phase 2**: Amazon S3 Private Bucket Provisioning & Configuration.
 3. **Phase 3**: Amazon CloudFront CDN Distribution with Origin Access Control (OAC).
 4. **Phase 4**: Amazon DynamoDB Tables Creation (Visitor Counter & Contact Messages).
@@ -22,18 +22,24 @@ The deployment is executed in 8 logical phases:
 
 ## Phase 1: Local Portfolio Asset Preparation
 
-Your portfolio frontend consists of standard static assets:
-- `index.html`: Modern, responsive single-page portfolio structure.
-- `style.css`: Clean, dark/light modern UI design.
-- `app.js`: Client-side logic for dynamic animations, visitor counter fetch, and contact form submission.
+Your portfolio frontend is a modern **React 19 + Vite** Single Page Application (SPA):
+- `src/components/`: Modular React components (`Hero`, `ArchitectureExplorer`, `GitHubProjects`, `Skills`, `ContactForm`, `Navbar`, `Footer`).
+- `src/config.js`: Central configuration holding your API Gateway URL, USN, and student info.
+- `vite.config.js`: Generates the production bundle in `dist/`.
 
 ### Directory Structure
 ```
 PortFolio/
-├── website/
-│   ├── index.html
-│   ├── style.css
-│   └── app.js
+├── src/
+│   ├── components/
+│   ├── config.js
+│   ├── App.jsx
+│   ├── index.css
+│   └── main.jsx
+├── public/
+├── index.html
+├── package.json
+├── vite.config.js
 ├── buildspec.yml
 ├── README.md
 ├── ARCHITECTURE_AND_SERVICES.md
@@ -42,7 +48,15 @@ PortFolio/
 └── BACKEND_SERVERLESS_CODE.md
 ```
 
-*(A complete, pre-configured frontend starter is provided in the `website/` directory of this repository).*
+### Build Command
+Compile your React application locally before manual upload (or let CodePipeline do it automatically):
+```bash
+npm run build
+```
+This outputs production-ready, minified static files into the `dist/` directory:
+- `dist/index.html`
+- `dist/assets/*.js`
+- `dist/assets/*.css`
 
 ---
 
@@ -68,14 +82,12 @@ Amazon S3 acts as the secure origin for your static web files.
 > Enabling standard S3 static website hosting requires disabling "Block Public Access", making your bucket vulnerable to direct public requests. Instead, we keep the bucket completely private and route all traffic securely through Amazon CloudFront via **Origin Access Control (OAC)**.
 
 ### Step 2.2: Initial Upload of Website Files
-1. Open your newly created bucket `shreeram-portfolio-storage-2026`.
-2. Click **Upload**.
-3. Upload all contents of the `website/` directory:
-   - `index.html`
-   - `style.css`
-   - `app.js`
-   - (Any images or PDF files).
-4. Click **Upload**.
+1. Run `npm run build` locally in your terminal to generate the `dist/` directory.
+2. Open your newly created bucket `shreeram-portfolio-storage-2026`.
+3. Click **Upload**.
+4. Upload all files and folders from inside the `dist/` directory (`index.html`, and the `assets/` folder).
+5. Click **Upload**.
+*(Note: Once CI/CD is configured in Phase 8, AWS CodePipeline & CodeBuild will automatically build and sync this for you!)*
 
 ---
 
@@ -258,20 +270,20 @@ Go to **API Details** -> Copy your **Invoke URL** (e.g., `https://abc123xyz.exec
 
 ## Phase 8: Connect Frontend & Test End-to-End
 
-1. Open `website/app.js` on your local system.
-2. Update the `API_BASE_URL` constant with your actual API Gateway Invoke URL:
+1. Open `src/config.js` on your local system.
+2. Update the `CONFIG.API_BASE_URL` constant with your actual API Gateway Invoke URL:
    ```javascript
-   const API_BASE_URL = "https://abc123xyz.execute-api.ap-south-1.amazonaws.com";
+   export const CONFIG = {
+     API_BASE_URL: "https://abc123xyz.execute-api.ap-south-1.amazonaws.com",
+     // ...
+   };
    ```
-3. Upload the updated `app.js` to your S3 bucket.
-4. **Invalidate CloudFront Cache**:
-   - Go to CloudFront console -> **Distributions** -> Select your distribution.
-   - Click **Invalidations** tab -> **Create invalidation**.
-   - Object paths: `/*` -> Click **Create invalidation**.
+3. Commit and push the change to your Git repository (CodeCommit / GitHub).
+4. CodePipeline will automatically trigger CodeBuild to compile (`npm run build`), sync `dist/` to S3, and invalidate CloudFront!
 5. **Live Verification**:
    - Open your CloudFront URL in an Incognito window.
-   - Observe the Visitor Counter incrementing dynamically!
-   - Fill out the Contact Form and submit. Check your DynamoDB table and your email inbox for the instant notification.
+   - Observe the Visitor Counter badge incrementing dynamically!
+   - Fill out the Contact Form and submit. Check your DynamoDB table and your email inbox for the instant SNS notification.
 
 ---
 
