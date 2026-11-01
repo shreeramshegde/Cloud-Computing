@@ -1,0 +1,34 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      python: 3.12
+    commands:
+      - echo "Installing deployment dependencies..."
+      - pip install --upgrade awscli
+
+  pre_build:
+    commands:
+      - echo "===> Stage: Pre-Build Validation"
+      - echo "Checking website directory structure..."
+      - test -f website/index.html || { echo "ERROR: website/index.html not found!"; exit 1; }
+      - test -f website/style.css || { echo "ERROR: website/style.css not found!"; exit 1; }
+      - test -f website/app.js || { echo "ERROR: website/app.js not found!"; exit 1; }
+      - echo "All required assets verified successfully."
+
+  build:
+    commands:
+      - echo "===> Stage: Asset Synchronization to S3"
+      - echo "Target S3 Bucket: $S3_BUCKET_NAME"
+      - aws s3 sync ./website s3://$S3_BUCKET_NAME --delete --cache-control "max-age=31536000,public" --exclude "index.html"
+      - aws s3 cp ./website/index.html s3://$S3_BUCKET_NAME/index.html --cache-control "max-age=0,no-cache,no-store,must-revalidate"
+      - echo "S3 asset synchronization complete."
+
+  post_build:
+    commands:
+      - echo "===> Stage: CloudFront Edge Cache Invalidation"
+      - echo "CloudFront Distribution ID: $CLOUDFRONT_DIST_ID"
+      - INVALIDATION_ID=$(aws cloudfront create-invalidation --distribution-id $CLOUDFRONT_DIST_ID --paths "/*" --query 'Invalidation.Id' --output text)
+      - echo "CloudFront invalidation successfully submitted. Invalidation ID: $INVALIDATION_ID"
+      - echo "===> Continuous Deployment Pipeline Execution Succeeded!"
