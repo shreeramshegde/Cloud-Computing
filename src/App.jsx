@@ -1,59 +1,36 @@
 import React, { useEffect, useState } from 'react';
-import { Navbar } from './components/Navbar';
-import { Hero } from './components/Hero';
-import { ArchitectureExplorer } from './components/ArchitectureExplorer';
-import { Projects } from './components/Projects';
-import { Skills } from './components/Skills';
-import { Education } from './components/Education';
-import { ContactForm } from './components/ContactForm';
-import { Footer } from './components/Footer';
+import Header from './components/Header';
+import MarqueeTicker from './components/MarqueeTicker';
+import Hero from './components/Hero';
+import Works from './components/Works';
+import Philosophy from './components/Philosophy';
+import Arsenal from './components/Arsenal';
+import Telemetry from './components/Telemetry';
+import Dispatch from './components/Dispatch';
+import Footer from './components/Footer';
 import { CONFIG } from './config';
 
 export function App() {
   const [visitorCount, setVisitorCount] = useState(null);
   const [isLoadingVisitor, setIsLoadingVisitor] = useState(true);
 
-  // Theme Management (Light vs Dark)
-  const [theme, setTheme] = useState(() => {
-    if (typeof window !== 'undefined' && window.localStorage) {
-      const savedTheme = localStorage.getItem('portfolio-theme');
-      if (savedTheme) return savedTheme;
-      if (window.matchMedia('(prefers-color-scheme: light)').matches) {
-        return 'light';
-      }
-    }
-    return 'dark';
-  });
-
-  useEffect(() => {
-    document.documentElement.setAttribute('data-theme', theme);
-    localStorage.setItem('portfolio-theme', theme);
-  }, [theme]);
-
-  const toggleTheme = () => {
-    setTheme(prev => (prev === 'dark' ? 'light' : 'dark'));
-  };
-
   useEffect(() => {
     async function fetchVisitor() {
-      if (!CONFIG.API_BASE_URL || CONFIG.API_BASE_URL === 'YOUR_API_GATEWAY_INVOKE_URL') {
-        setVisitorCount(42);
+      if (!CONFIG.API_BASE_URL) {
         setIsLoadingVisitor(false);
         return;
       }
 
       try {
         const res = await fetch(`${CONFIG.API_BASE_URL}/visitor-count`);
-        if (!res.ok) throw new Error('API Gateway error');
-        const data = await res.json();
-        if (data && data.count !== undefined) {
-          setVisitorCount(data.count);
-        } else {
-          setVisitorCount(1);
+        if (res.ok) {
+          const data = await res.json();
+          if (data && data.count !== undefined) {
+            setVisitorCount(data.count);
+          }
         }
       } catch (err) {
-        console.warn('Failed to reach visitor counter Lambda:', err);
-        setVisitorCount(1);
+        console.warn('Visitor counter fetch error:', err);
       } finally {
         setIsLoadingVisitor(false);
       }
@@ -63,23 +40,27 @@ export function App() {
   }, []);
 
   return (
-    <div className="portfolio-app">
-      <Navbar 
-        visitorCount={visitorCount} 
-        isLoadingVisitor={isLoadingVisitor} 
-        theme={theme}
-        onToggleTheme={toggleTheme}
-      />
-      <main>
+    <div className="min-h-screen bg-[var(--paper-bg)] text-[var(--ink-black)] flex flex-col font-sans selection:bg-[var(--terracotta)] selection:text-white">
+      {/* Top Header & Gazette Masthead */}
+      <Header visitorCount={visitorCount} />
+
+      {/* Looping Marquee Ticker */}
+      <MarqueeTicker />
+
+      {/* Main Broadsheet Newspaper Sections */}
+      <main className="flex-1">
         <Hero />
-        <ArchitectureExplorer />
-        <Projects />
-        <Skills />
-        <Education />
-        <ContactForm />
+        <Works />
+        <Philosophy />
+        <Arsenal />
+        <Telemetry visitorCount={visitorCount} isLoadingVisitor={isLoadingVisitor} />
+        <Dispatch />
       </main>
+
+      {/* Colophon & Newspaper Footer */}
       <Footer />
     </div>
   );
 }
+
 export default App;

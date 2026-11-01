@@ -1,201 +1,175 @@
-import React from 'react';
-import { ArrowUpRight, Sparkles, Server, Zap, Shield, Globe } from 'lucide-react';
-import { CONFIG } from '../config';
+import React, { useState } from "react";
+import { CONFIG } from "../config";
+import { playTypewriterClick, playPaperRustle, playStampThud } from "../utils/sound";
+import { ArrowDownRight, Sparkles, HeartCrack, Send, MapPin, Calendar, Award } from "lucide-react";
 
-export function Hero() {
+export default function Hero() {
+  const [activeAvatar, setActiveAvatar] = useState("miranda"); // "miranda" | "photo"
+
+  const toggleAvatar = () => {
+    playTypewriterClick();
+    setActiveAvatar((prev) => (prev === "miranda" ? "photo" : "miranda"));
+  };
+
+  const scrollToSection = (id) => {
+    playPaperRustle();
+    const el = document.getElementById(id);
+    if (el) {
+      el.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
   return (
-    <section id="hero" className="hero-wrap">
-      <div className="container">
-        <div className="hero-content">
-          {/* Zen Calm Badge */}
-          <div className="hero-pill-badge">
-            <Sparkles size={14} className="badge-sparkle" />
-            <span>A Calmer Cloud Experience • BIS505 Experiential Learning</span>
+    <section id="hero" className="w-full border-b border-[var(--border-ink)] py-8 sm:py-14 px-4 sm:px-8">
+      <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
+        
+        {/* Left Column (Editorial Story & Bio) - 7 Columns */}
+        <div className="lg:col-span-7 flex flex-col justify-between">
+          <div>
+            {/* Broadsheet Category Label */}
+            <div className="flex items-center gap-2 mb-3">
+              <span className="bg-[var(--terracotta)] text-white text-[10px] font-mono-tag font-bold px-2 py-0.5 rounded tracking-wider">
+                FEATURED EDITORIAL
+              </span>
+              <span className="text-xs font-mono-tag text-[var(--ink-muted)]">
+                ISSUE 26 &bull; SECTION A-1
+              </span>
+            </div>
+
+            {/* Main Headline */}
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-editorial-title font-black text-[var(--ink-black)] leading-[1.12] mb-6 tracking-tight">
+              I architect resilient distributed systems and iconic digital interfaces from raw cloud primitives.
+            </h2>
+
+            {/* Drop-cap Lead Paragraph */}
+            <p className="drop-cap text-base sm:text-lg text-[var(--ink-black)] leading-relaxed text-justify mb-6 font-editorial-body">
+              {CONFIG.AUTHOR.bio}
+            </p>
+
+            {/* Miranda-Style Role Badges */}
+            <div className="flex flex-wrap gap-2.5 mb-8">
+              {CONFIG.AUTHOR.rolePills.map((role, idx) => (
+                <span
+                  key={idx}
+                  className="bg-[var(--paper-surface)] hover:bg-[var(--paper-light)] border border-[var(--border-ink)] px-3 py-1 rounded text-xs font-headline tracking-widest text-[var(--ink-black)] transition-colors cursor-default"
+                >
+                  &bull; {role}
+                </span>
+              ))}
+            </div>
+
+            {/* Romantic / Heartbroken Tech Philosophy Quote Box */}
+            <div className="broadsheet-card p-5 sm:p-6 rounded border-l-4 border-l-[var(--terracotta)] mb-8 shadow-sm">
+              <div className="flex items-center justify-between gap-2 mb-3">
+                <span className="text-xs font-mono-tag font-bold text-[var(--terracotta)] flex items-center gap-1.5">
+                  <HeartCrack className="w-4 h-4 text-[var(--terracotta)]" />
+                  THE ARTISAN'S LOG &bull; INVARIANT
+                </span>
+                <span className="text-[11px] font-mono-tag text-[var(--ink-muted)]">
+                  SYS_ERR: DISCONNECTED
+                </span>
+              </div>
+              <blockquote className="text-base sm:text-lg italic font-editorial-body text-[var(--ink-black)] leading-relaxed mb-3">
+                &ldquo;{CONFIG.AUTHOR.philosophyQuote}&rdquo;
+              </blockquote>
+              <div className="text-xs font-mono-tag text-[var(--ink-muted)] text-right font-bold">
+                &mdash; {CONFIG.AUTHOR.philosophyAuthor}
+              </div>
+            </div>
           </div>
 
-          <h1 className="hero-title">
-            Architecting Serverless Systems with <span className="coral-highlight">Zen Simplicity.</span>
-          </h1>
-
-          <p className="hero-intro">
-            I'm <strong>{CONFIG.STUDENT.name}</strong>, Information Science &amp; Engineering undergraduate 
-            at <strong>{CONFIG.STUDENT.institution}</strong> (USN: <span className="mono">{CONFIG.STUDENT.usn}</span>). 
-            Guided by <strong>{CONFIG.STUDENT.guide}</strong>, this project eliminates server maintenance overhead 
-            by deploying an enterprise event-driven portfolio entirely across 14 native AWS services.
-          </p>
-
-          <div className="hero-cta-group">
-            <a href="#architecture" className="btn btn-primary">
-              Explore AWS Architecture
-              <ArrowUpRight size={16} />
-            </a>
-            <a href="#projects" className="btn btn-secondary">
-              View GitHub Projects
-            </a>
-          </div>
-
-          {/* Zen Bento Metric Cards */}
-          <div className="bento-metrics">
-            <div className="bento-metric-card">
-              <span className="bento-num mono">0</span>
-              <span className="bento-label">Virtual Machines (No EC2)</span>
-            </div>
-            <div className="bento-metric-card">
-              <span className="bento-num mono">14</span>
-              <span className="bento-label">Native AWS Services</span>
-            </div>
-            <div className="bento-metric-card">
-              <span className="bento-num mono">&lt; 30ms</span>
-              <span className="bento-label">Edge CDN Latency</span>
-            </div>
-            <div className="bento-metric-card highlight">
-              <span className="bento-num mono">$0.00</span>
-              <span className="bento-label">Free-Tier Cost</span>
-            </div>
-          </div>
-
-          {/* Minimalist Service Pill Strip */}
-          <div className="service-strip">
-            <span className="zen-tag">Amazon S3</span>
-            <span className="zen-tag">CloudFront CDN</span>
-            <span className="zen-tag">Origin Access Control (OAC)</span>
-            <span className="zen-tag">AWS Lambda</span>
-            <span className="zen-tag">Amazon DynamoDB</span>
-            <span className="zen-tag">Amazon API Gateway</span>
-            <span className="zen-tag">Amazon SNS</span>
-            <span className="zen-tag">AWS CodePipeline</span>
+          {/* Quick Action Navigation Buttons */}
+          <div className="flex flex-wrap items-center gap-4 pt-2">
+            <button
+              onClick={() => scrollToSection("works")}
+              className="bg-[var(--ink-black)] text-[var(--paper-light)] hover:bg-[var(--terracotta)] transition-all px-5 py-2.5 rounded font-mono-tag text-xs font-bold flex items-center gap-2 cursor-pointer shadow"
+            >
+              <span>[02] EXPLORE ALL WORKS</span>
+              <ArrowDownRight className="w-4 h-4" />
+            </button>
+            <button
+              onClick={() => scrollToSection("dispatch")}
+              className="bg-transparent hover:bg-[var(--paper-surface)] text-[var(--ink-black)] border border-[var(--border-ink)] transition-all px-5 py-2.5 rounded font-mono-tag text-xs font-bold flex items-center gap-2 cursor-pointer"
+            >
+              <span>[05] SEND DISPATCH</span>
+              <Send className="w-3.5 h-3.5 text-[var(--terracotta)]" />
+            </button>
           </div>
         </div>
+
+        {/* Right Column (Miranda Style Avatar & Stamp Frame) - 5 Columns */}
+        <div className="lg:col-span-5 flex flex-col items-center sm:items-end gap-8">
+          
+          {/* Newspaper Avatar Photo Frame with Interactive Art Toggle */}
+          <div className="w-full max-w-sm newspaper-photo relative rounded">
+            <div className="relative overflow-hidden aspect-square rounded border border-[var(--border-ink)] bg-[var(--paper-bg)]">
+              <img
+                src={activeAvatar === "miranda" ? "/assets/avatar_miranda.jpg" : "/assets/shreeram_photo.jpg"}
+                alt="Shreeram S Hegde - Portrait"
+                className="w-full h-full object-cover object-top transition-transform duration-700 hover:scale-105"
+              />
+              
+              {/* Star Badge Indicator */}
+              <div className="absolute top-3 left-3 bg-[var(--ink-black)] text-[var(--paper-light)] text-[10px] font-mono-tag px-2 py-0.5 rounded flex items-center gap-1 shadow">
+                <Sparkles className="w-3 h-3 text-amber-400" />
+                <span>{activeAvatar === "miranda" ? "MIRANDA ANIME ART" : "ORIGINAL PHOTOGRAPH"}</span>
+              </div>
+            </div>
+
+            {/* Avatar Switcher Bar */}
+            <div className="mt-3 flex items-center justify-between text-xs font-mono-tag pt-1 border-t border-[var(--border-ink)]">
+              <span className="text-[var(--ink-muted)]">FIG. 01 &bull; SHREERAM S HEGDE</span>
+              <button
+                onClick={toggleAvatar}
+                className="text-[var(--terracotta)] hover:underline font-bold cursor-pointer flex items-center gap-1"
+                title="Toggle between illustrated anime art and original photograph"
+              >
+                <span>[TOGGLE {activeAvatar === "miranda" ? "PHOTO" : "ART"}]</span>
+              </button>
+            </div>
+          </div>
+
+          {/* Perforated Postage Stamp Card */}
+          <div 
+            onClick={playStampThud}
+            className="w-full max-w-sm flex items-center justify-center p-2 cursor-pointer hover:scale-[1.02] transition-transform duration-300"
+            title="Official Dispatch Stamp • Click for tactile stamp effect"
+          >
+            <img 
+              src="/assets/stamp_shreeram.svg" 
+              alt="Shreeram S Hegde - Official Postage Stamp" 
+              className="w-full max-w-[280px] drop-shadow-md"
+            />
+          </div>
+
+          {/* Quick Telegram Status Card */}
+          <div className="w-full max-w-sm broadsheet-card p-4 rounded text-xs font-mono-tag">
+            <div className="flex items-center justify-between border-b border-[var(--border-ink)] pb-2 mb-2">
+              <span className="font-bold text-[var(--ink-black)] flex items-center gap-1">
+                <MapPin className="w-3.5 h-3.5 text-[var(--terracotta)]" />
+                LOCATION
+              </span>
+              <span>{CONFIG.AUTHOR.locationShort}</span>
+            </div>
+            <div className="flex items-center justify-between border-b border-[var(--border-ink)] pb-2 mb-2">
+              <span className="font-bold text-[var(--ink-black)] flex items-center gap-1">
+                <Calendar className="w-3.5 h-3.5 text-[var(--terracotta)]" />
+                DATE OF BIRTH
+              </span>
+              <span>{CONFIG.AUTHOR.dob}</span>
+            </div>
+            <div className="flex items-center justify-between">
+              <span className="font-bold text-[var(--ink-black)] flex items-center gap-1">
+                <Award className="w-3.5 h-3.5 text-[var(--terracotta)]" />
+                STATUS
+              </span>
+              <span className="text-emerald-700 font-bold">&bull; OPEN FOR ARCHITECTURE</span>
+            </div>
+          </div>
+
+        </div>
+
       </div>
-
-      <style>{`
-        .hero-wrap {
-          padding: 100px 0 60px;
-          text-align: center;
-        }
-
-        .hero-content {
-          max-width: 860px;
-          margin: 0 auto;
-        }
-
-        .hero-pill-badge {
-          display: inline-flex;
-          align-items: center;
-          gap: 8px;
-          background: var(--coral-soft);
-          border: 1px solid var(--coral-border);
-          color: var(--coral-primary);
-          padding: 6px 18px;
-          border-radius: 9999px;
-          font-size: 0.83rem;
-          font-weight: 600;
-          margin-bottom: 24px;
-        }
-
-        .badge-sparkle {
-          color: var(--coral-primary);
-        }
-
-        .hero-title {
-          font-size: 3.5rem;
-          font-weight: 800;
-          letter-spacing: -0.035em;
-          line-height: 1.15;
-          margin-bottom: 24px;
-        }
-
-        .coral-highlight {
-          color: var(--coral-primary);
-        }
-
-        .hero-intro {
-          font-size: 1.15rem;
-          color: var(--text-secondary);
-          line-height: 1.75;
-          margin-bottom: 38px;
-        }
-
-        .hero-cta-group {
-          display: flex;
-          justify-content: center;
-          gap: 14px;
-          margin-bottom: 48px;
-          flex-wrap: wrap;
-        }
-
-        .bento-metrics {
-          display: grid;
-          grid-template-columns: repeat(4, 1fr);
-          gap: 16px;
-          margin-bottom: 36px;
-        }
-
-        .bento-metric-card {
-          background-color: var(--bg-card);
-          border: 1px solid var(--border-subtle);
-          border-radius: 20px;
-          padding: 22px 16px;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          box-shadow: var(--card-shadow);
-          transition: transform 0.2s, border-color 0.2s;
-        }
-
-        .bento-metric-card:hover {
-          transform: translateY(-2px);
-          border-color: var(--border-hover);
-        }
-
-        .bento-metric-card.highlight {
-          background: var(--coral-soft);
-          border-color: var(--coral-border);
-        }
-
-        .bento-metric-card.highlight .bento-num {
-          color: var(--coral-primary);
-        }
-
-        .bento-num {
-          font-size: 1.65rem;
-          font-weight: 800;
-          color: var(--text-primary);
-          margin-bottom: 4px;
-        }
-
-        .bento-label {
-          font-size: 0.78rem;
-          color: var(--text-muted);
-          font-weight: 500;
-        }
-
-        .service-strip {
-          display: flex;
-          flex-wrap: wrap;
-          justify-content: center;
-          gap: 8px;
-        }
-
-        .zen-tag {
-          font-size: 0.78rem;
-          color: var(--text-muted);
-          background: var(--pill-bg);
-          border: 1px solid var(--border-subtle);
-          padding: 5px 14px;
-          border-radius: 9999px;
-          font-family: var(--font-mono);
-        }
-
-        @media (max-width: 768px) {
-          .hero-title {
-            font-size: 2.4rem;
-          }
-          .bento-metrics {
-            grid-template-columns: repeat(2, 1fr);
-          }
-        }
-      `}</style>
     </section>
   );
 }

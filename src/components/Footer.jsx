@@ -1,189 +1,170 @@
 import React from 'react';
-import { Award } from 'lucide-react';
-import { ZenLogo } from './ZenLogo';
-import { GithubIcon } from './GithubIcon';
 import { CONFIG } from '../config';
+import { playPaperRustle } from '../utils/sound';
 
 export function Footer() {
+  const scrollToTop = () => {
+    playPaperRustle();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   return (
-    <footer className="zen-footer">
-      <div className="container zen-footer-inner">
-        <div className="zen-footer-top">
-          <div className="zen-footer-left">
-            <div className="zen-footer-brand">
-              <ZenLogo size={22} />
-              <span className="zen-brand-text">Serverless Portfolio Hosting on AWS</span>
+    <footer className="bg-[#cfc4ba] border-t-4 border-[#1d1d1b] pt-16 pb-12 text-[#1d1d1b]">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        {/* Newspaper Colophon Header */}
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-8 border-b-2 border-[#1d1d1b] pb-12 mb-10">
+          
+          {/* Main Masthead Credit */}
+          <div className="md:col-span-6 space-y-4">
+            <div className="flex items-center gap-3">
+              <span className="w-4 h-4 bg-[#d35230] inline-block"></span>
+              <span className="font-mono text-xs font-bold uppercase tracking-widest text-[#1d1d1b]">
+                COLOPHON &middot; ISSUE VOL. XXIV &mdash; 2026
+              </span>
             </div>
-            <p className="zen-footer-meta">
-              Built for <strong>{CONFIG.STUDENT.course}</strong> at {CONFIG.STUDENT.institution}.
+            
+            <h3 className="font-serif text-3xl sm:text-4xl font-black uppercase tracking-tight text-[#1d1d1b]">
+              {CONFIG.AUTHOR.name}
+            </h3>
+
+            <p className="font-mono text-xs text-[#1d1d1b]/80 max-w-md leading-relaxed">
+              Arch Guy with deep knowledge of Full-Stack &amp; Spring Boot. Architecting distributed serverless systems on AWS and crafting tactile, paper-grade digital artifacts from Mysuru, Karnataka, India.
             </p>
-            <p className="zen-footer-credits">
-              Student: <strong>{CONFIG.STUDENT.name}</strong> (USN: <span className="mono">{CONFIG.STUDENT.usn}</span>) • Guide: <strong>{CONFIG.STUDENT.guide}</strong>
-            </p>
+
+            <div className="font-mono text-[11px] text-[#1d1d1b]/60 space-y-1">
+              <p>&bull; TYPESET IN: CINZEL, PLAYFAIR DISPLAY, SPACE MONO &amp; OSWALD</p>
+              <p>&bull; PALETTE: AGED NEWSPRINT (#cfc4ba), CARBON BLACK (#1d1d1b), TERRACOTTA (#d35230)</p>
+              <p>&bull; INFRASTRUCTURE: AWS AP-SOUTHEAST-2 (S3, API GATEWAY, DYNAMODB, SNS)</p>
+            </div>
           </div>
 
-          <div className="zen-footer-right">
-            <div className="zen-free-tier-pill">
-              <Award size={15} />
-              <span>100% Serverless &amp; Free Tier</span>
+          {/* Quick Index */}
+          <div className="md:col-span-3 space-y-3">
+            <div className="font-mono text-xs font-bold uppercase tracking-widest text-[#d35230] border-b border-[#1d1d1b]/40 pb-2">
+              EDITION DIRECTORY
             </div>
-            <a 
-              href={CONFIG.STUDENT.githubUrl} 
-              target="_blank" 
-              rel="noreferrer"
-              className="zen-github-link"
-            >
-              <GithubIcon size={16} />
-              <span>github.com/{CONFIG.STUDENT.githubUsername}</span>
-            </a>
+            <ul className="space-y-2 font-mono text-xs">
+              <li>
+                <a href="#hero" onClick={playPaperRustle} className="hover:text-[#d35230] transition-colors flex items-center justify-between">
+                  <span>I. Front Page</span>
+                  <span>&rarr;</span>
+                </a>
+              </li>
+              <li>
+                <a href="#works" onClick={playPaperRustle} className="hover:text-[#d35230] transition-colors flex items-center justify-between">
+                  <span>II. Selected Works</span>
+                  <span>&rarr;</span>
+                </a>
+              </li>
+              <li>
+                <a href="#philosophy" onClick={playPaperRustle} className="hover:text-[#d35230] transition-colors flex items-center justify-between">
+                  <span>III. Philosophy</span>
+                  <span>&rarr;</span>
+                </a>
+              </li>
+              <li>
+                <a href="#arsenal" onClick={playPaperRustle} className="hover:text-[#d35230] transition-colors flex items-center justify-between">
+                  <span>IV. Technical Arsenal</span>
+                  <span>&rarr;</span>
+                </a>
+              </li>
+              <li>
+                <a href="#telemetry" onClick={playPaperRustle} className="hover:text-[#d35230] transition-colors flex items-center justify-between">
+                  <span>V. Live Telemetry</span>
+                  <span>&rarr;</span>
+                </a>
+              </li>
+              <li>
+                <a href="#contact" onClick={playPaperRustle} className="hover:text-[#d35230] transition-colors flex items-center justify-between">
+                  <span>VI. Telegraphic Wire</span>
+                  <span>&rarr;</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          {/* Direct Coordinates & Back-To-Top */}
+          <div className="md:col-span-3 space-y-3 flex flex-col justify-between">
+            <div>
+              <div className="font-mono text-xs font-bold uppercase tracking-widest text-[#d35230] border-b border-[#1d1d1b]/40 pb-2 mb-3">
+                DIRECT WIRES
+              </div>
+              <ul className="space-y-2 font-mono text-xs">
+                <li>
+                  <a
+                    href={CONFIG.AUTHOR.githubUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hover:text-[#d35230] transition-colors flex items-center justify-between"
+                  >
+                    <span>GitHub /shreeramshegde</span>
+                    <span>&nearr;</span>
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href={CONFIG.AUTHOR.linkedinUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hover:text-[#d35230] transition-colors flex items-center justify-between"
+                  >
+                    <span>LinkedIn /in/shreeram-suchetan</span>
+                    <span>&nearr;</span>
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href={CONFIG.AUTHOR.resumeUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hover:text-[#d35230] transition-colors flex items-center justify-between font-bold text-[#d35230]"
+                  >
+                    <span>Curriculum Vitae (PDF)</span>
+                    <span>&nearr;</span>
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href={`mailto:${CONFIG.AUTHOR.email}`}
+                    className="hover:text-[#d35230] transition-colors flex items-center justify-between truncate"
+                  >
+                    <span className="truncate">{CONFIG.AUTHOR.email}</span>
+                    <span>&nearr;</span>
+                  </a>
+                </li>
+              </ul>
+            </div>
+
+            {/* Back to top button */}
+            <div className="pt-4">
+              <button
+                type="button"
+                onClick={scrollToTop}
+                className="w-full inline-flex items-center justify-center gap-2 px-4 py-3 border-2 border-[#1d1d1b] bg-[#cfc4ba] hover:bg-[#1d1d1b] hover:text-[#cfc4ba] font-mono text-xs uppercase font-bold tracking-widest transition-colors shadow-[3px_3px_0px_#1d1d1b] active:translate-y-0.5"
+              >
+                <span>&uarr; Return to Top</span>
+              </button>
+            </div>
+          </div>
+
+        </div>
+
+        {/* Bottom Banner */}
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 font-mono text-xs text-[#1d1d1b]/70">
+          <div>
+            &copy; {new Date().getFullYear()} {CONFIG.AUTHOR.name}. ALL RIGHTS RESERVED &middot; CRAFTED IN MYSURU, IN.
+          </div>
+          <div className="flex items-center gap-3">
+            <span className="inline-block w-2 h-2 rounded-full bg-emerald-600 animate-pulse"></span>
+            <span>AMAZON S3 &bull; CLOUD RUN &bull; API GATEWAY &bull; DYNAMODB</span>
           </div>
         </div>
 
-        <div className="zen-footer-bottom">
-          <p>© {new Date().getFullYear()} {CONFIG.STUDENT.name}. Department of Information Science &amp; Engineering, NIE Mysuru.</p>
-          <p className="zen-stack-text mono">React 19 • S3 • CloudFront • Lambda • DynamoDB • API Gateway • SNS</p>
-        </div>
-
-        {/* Signature Zen Concentric Circles Decoration */}
-        <div className="zen-concentric-circles" aria-hidden="true">
-          <div className="zen-circle circle-1"></div>
-          <div className="zen-circle circle-2"></div>
-          <div className="zen-circle circle-3"></div>
-          <div className="zen-circle circle-4"></div>
-        </div>
       </div>
-
-      <style>{`
-        .zen-footer {
-          border-top: 1px solid var(--border-subtle);
-          background-color: var(--bg-surface);
-          padding: 64px 0 32px;
-          position: relative;
-          overflow: hidden;
-        }
-
-        .zen-footer-inner {
-          position: relative;
-          z-index: 2;
-        }
-
-        .zen-footer-top {
-          display: flex;
-          justify-content: space-between;
-          align-items: flex-start;
-          gap: 32px;
-          padding-bottom: 36px;
-          border-bottom: 1px solid var(--border-subtle);
-        }
-
-        .zen-footer-brand {
-          display: flex;
-          align-items: center;
-          gap: 10px;
-          font-weight: 700;
-          font-size: 1.05rem;
-          margin-bottom: 8px;
-          color: var(--text-primary);
-        }
-
-        .zen-footer-meta {
-          color: var(--text-secondary);
-          font-size: 0.9rem;
-          margin-bottom: 4px;
-        }
-
-        .zen-footer-credits {
-          color: var(--text-muted);
-          font-size: 0.85rem;
-        }
-
-        .zen-footer-right {
-          display: flex;
-          flex-direction: column;
-          align-items: flex-end;
-          gap: 12px;
-        }
-
-        .zen-free-tier-pill {
-          display: flex;
-          align-items: center;
-          gap: 6px;
-          background: rgba(16, 185, 129, 0.08);
-          border: 1px solid rgba(16, 185, 129, 0.25);
-          color: #10b981;
-          padding: 5px 14px;
-          border-radius: 9999px;
-          font-size: 0.8rem;
-          font-weight: 600;
-        }
-
-        .zen-github-link {
-          display: flex;
-          align-items: center;
-          gap: 8px;
-          color: var(--text-secondary);
-          text-decoration: none;
-          font-size: 0.84rem;
-          font-family: var(--font-mono);
-          transition: color 0.15s;
-        }
-
-        .zen-github-link:hover {
-          color: var(--coral-primary);
-        }
-
-        .zen-footer-bottom {
-          padding-top: 26px;
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          color: var(--text-muted);
-          font-size: 0.82rem;
-        }
-
-        .zen-stack-text {
-          font-size: 0.74rem;
-        }
-
-        /* Zen Concentric Watermark */
-        .zen-concentric-circles {
-          position: absolute;
-          right: -80px;
-          bottom: -100px;
-          pointer-events: none;
-          z-index: 1;
-          opacity: 0.4;
-        }
-
-        .zen-circle {
-          position: absolute;
-          border-radius: 50%;
-          border: 1px solid var(--coral-border);
-          top: 50%;
-          left: 50%;
-          transform: translate(-50%, -50%);
-        }
-
-        .circle-1 { width: 140px; height: 140px; }
-        .circle-2 { width: 260px; height: 260px; }
-        .circle-3 { width: 380px; height: 380px; }
-        .circle-4 { width: 500px; height: 500px; }
-
-        @media (max-width: 820px) {
-          .zen-footer-top {
-            flex-direction: column;
-            align-items: flex-start;
-          }
-          .zen-footer-right {
-            align-items: flex-start;
-          }
-          .zen-footer-bottom {
-            flex-direction: column;
-            gap: 10px;
-            text-align: center;
-          }
-        }
-      `}</style>
     </footer>
   );
 }
+
+export default Footer;
+

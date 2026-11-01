@@ -20,3 +20,8 @@ __pycache__/
 *.log
 npm-debug.log*
 yarn-debug.log*
+
+# Custom One  
+documents/
+PreReqs/
+
