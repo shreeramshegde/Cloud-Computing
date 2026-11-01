@@ -25,9 +25,14 @@
     color: var(--ink-black);
     font-family: 'Playfair Display', Georgia, serif;
     scroll-behavior: smooth;
+    scroll-padding-top: 140px; /* Offset for dynamic sticky newspaper header */
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+  }
+
+  section[id], [id] {
+    scroll-margin-top: 140px; /* Ensures anchors never hide under sticky header */
   }
 
   body {
@@ -109,7 +114,11 @@
   scrollbar-width: none;
 }
 
-/* Vintage Marquee Animation */
+/* =========================================================
+   NICCOLÒ MIRANDA STYLE ANIMATIONS & MICRO-INTERACTIONS
+   ========================================================= */
+
+/* 1. Vintage Infinite Marquee Ticker */
 @keyframes marquee {
   0% {
     transform: translateX(0%);
@@ -129,29 +138,126 @@
   animation-play-state: paused;
 }
 
-/* Postage Stamp Perforation Border */
-.stamp-border {
-  background: var(--paper-light);
-  border: 1px dashed var(--paper-dark);
-  position: relative;
-  box-shadow: 3px 5px 12px rgba(29, 29, 27, 0.12);
+/* 2. Slow Continuous Rotation (for Vintage Circular Postmark Seal) */
+@keyframes spinSlow {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
-/* Halftone / Newspaper Photo Frame */
+.animate-spin-slow {
+  animation: spinSlow 20s linear infinite;
+}
+
+.animate-spin-slow:hover {
+  animation-duration: 8s;
+}
+
+/* 3. Subtle Paper Float & Drift */
+@keyframes paperFloat {
+  0%, 100% {
+    transform: translateY(0px) rotate(-0.5deg);
+  }
+  50% {
+    transform: translateY(-8px) rotate(0.8deg);
+  }
+}
+
+.animate-paper-float {
+  animation: paperFloat 6s ease-in-out infinite;
+}
+
+/* 4. Tactile Stamp Impact Bounce (When clicked) */
+@keyframes stampImpact {
+  0% {
+    transform: scale(1);
+  }
+  40% {
+    transform: scale(0.92) rotate(-1deg);
+  }
+  75% {
+    transform: scale(1.06) rotate(1deg);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.animate-stamp-impact {
+  animation: stampImpact 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* 5. Live Radar Pulsing Ring for AWS Telemetry */
+@keyframes radarPulse {
+  0% {
+    transform: scale(0.8);
+    opacity: 0.8;
+  }
+  70% {
+    transform: scale(2.2);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(2.2);
+    opacity: 0;
+  }
+}
+
+.animate-radar-ring {
+  position: absolute;
+  border-radius: 9999px;
+  border: 1.5px solid var(--terracotta);
+  animation: radarPulse 2.8s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+}
+
+/* 6. Handcrafted Halftone / Newspaper Photo Frame */
 .newspaper-photo {
-  border: 1px solid var(--ink-black);
+  border: 2px solid var(--ink-black);
   padding: 8px;
   background: #ffffff;
-  box-shadow: 4px 6px 0px var(--ink-black);
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 6px 8px 0px var(--ink-black);
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
 }
 
 .newspaper-photo:hover {
-  transform: translateY(-3px) rotate(-0.5deg);
-  box-shadow: 6px 10px 0px var(--ink-black);
+  transform: translateY(-5px) rotate(-0.8deg);
+  box-shadow: 10px 14px 0px var(--ink-black);
 }
 
-/* Miranda Quirky Tracking effect */
+/* 7. Interactive Broadsheet Project Card Lift & Tilt */
+.broadsheet-card {
+  background-color: var(--paper-surface);
+  border: 2px solid var(--ink-black);
+  box-shadow: 4px 4px 0px var(--ink-black);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+}
+
+.broadsheet-card:hover {
+  background-color: var(--paper-light);
+  transform: translateY(-5px) rotate(-0.4deg);
+  box-shadow: 8px 10px 0px var(--ink-black);
+}
+
+/* 8. Postage Stamp Perforation Border */
+.stamp-border {
+  background: var(--paper-light);
+  border: 2px dashed var(--ink-black);
+  position: relative;
+  box-shadow: 5px 7px 0px rgba(29, 29, 27, 0.85);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.stamp-border:hover {
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: 8px 11px 0px var(--terracotta);
+}
+
+/* 9. Miranda Quirky Typographic Tracking */
 .quirky-tracking {
   letter-spacing: 0.08em;
 }
@@ -160,17 +266,25 @@
   font-style: italic;
 }
 
-/* Interactive Card Hover */
-.broadsheet-card {
-  background-color: var(--paper-surface);
-  border: 1px solid var(--border-ink);
-  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+/* 10. Hand-drawn Ink Underline Accent */
+.ink-underline {
   position: relative;
+  display: inline-block;
 }
 
-.broadsheet-card:hover {
-  background-color: var(--paper-light);
-  border-color: var(--ink-black);
-  transform: translateY(-4px);
-  box-shadow: 0 12px 24px -8px rgba(29, 29, 27, 0.18);
+.ink-underline::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -3px;
+  width: 100%;
+  height: 2px;
+  background-color: var(--terracotta);
+  transform: scaleX(0.85);
+  transform-origin: left;
+  transition: transform 0.3s ease;
+}
+
+.ink-underline:hover::after {
+  transform: scaleX(1);
 }

@@ -1,11 +1,18 @@
 import React from 'react';
 import { CONFIG } from '../config';
 import { playPaperRustle } from '../utils/sound';
+import { smoothScrollTo } from '../utils/scroll';
 
 export function Footer() {
   const scrollToTop = () => {
     playPaperRustle();
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleNavClick = (e, id) => {
+    e.preventDefault();
+    playPaperRustle();
+    smoothScrollTo(id, 28);
   };
 
   return (
@@ -46,37 +53,37 @@ export function Footer() {
             </div>
             <ul className="space-y-2 font-mono text-xs">
               <li>
-                <a href="#hero" onClick={playPaperRustle} className="hover:text-[#d35230] transition-colors flex items-center justify-between">
+                <a href="#hero" onClick={(e) => handleNavClick(e, 'hero')} className="hover:text-[#d35230] transition-colors flex items-center justify-between">
                   <span>I. Front Page</span>
                   <span>&rarr;</span>
                 </a>
               </li>
               <li>
-                <a href="#works" onClick={playPaperRustle} className="hover:text-[#d35230] transition-colors flex items-center justify-between">
+                <a href="#works" onClick={(e) => handleNavClick(e, 'works')} className="hover:text-[#d35230] transition-colors flex items-center justify-between">
                   <span>II. Selected Works</span>
                   <span>&rarr;</span>
                 </a>
               </li>
               <li>
-                <a href="#philosophy" onClick={playPaperRustle} className="hover:text-[#d35230] transition-colors flex items-center justify-between">
+                <a href="#philosophy" onClick={(e) => handleNavClick(e, 'philosophy')} className="hover:text-[#d35230] transition-colors flex items-center justify-between">
                   <span>III. Philosophy</span>
                   <span>&rarr;</span>
                 </a>
               </li>
               <li>
-                <a href="#arsenal" onClick={playPaperRustle} className="hover:text-[#d35230] transition-colors flex items-center justify-between">
+                <a href="#arsenal" onClick={(e) => handleNavClick(e, 'arsenal')} className="hover:text-[#d35230] transition-colors flex items-center justify-between">
                   <span>IV. Technical Arsenal</span>
                   <span>&rarr;</span>
                 </a>
               </li>
               <li>
-                <a href="#telemetry" onClick={playPaperRustle} className="hover:text-[#d35230] transition-colors flex items-center justify-between">
+                <a href="#telemetry" onClick={(e) => handleNavClick(e, 'telemetry')} className="hover:text-[#d35230] transition-colors flex items-center justify-between">
                   <span>V. Live Telemetry</span>
                   <span>&rarr;</span>
                 </a>
               </li>
               <li>
-                <a href="#contact" onClick={playPaperRustle} className="hover:text-[#d35230] transition-colors flex items-center justify-between">
+                <a href="#dispatch" onClick={(e) => handleNavClick(e, 'dispatch')} className="hover:text-[#d35230] transition-colors flex items-center justify-between">
                   <span>VI. Telegraphic Wire</span>
                   <span>&rarr;</span>
                 </a>

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { CONFIG } from "../config";
 import { playTypewriterClick, playPaperRustle, toggleSound, isSoundEnabled } from "../utils/sound";
+import { smoothScrollTo } from "../utils/scroll";
 import { Volume2, VolumeX, ArrowUpRight, Radio } from "lucide-react";
 
 export default function Header({ visitorCount }) {
@@ -23,10 +24,7 @@ export default function Header({ visitorCount }) {
 
   const scrollToSection = (id) => {
     playPaperRustle();
-    const el = document.getElementById(id);
-    if (el) {
-      el.scrollIntoView({ behavior: 'smooth' });
-    }
+    smoothScrollTo(id, 28);
   };
 
   return (

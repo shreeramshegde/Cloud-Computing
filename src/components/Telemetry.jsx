@@ -1,6 +1,7 @@
 import React from "react";
 import { CONFIG } from "../config";
-import { Activity, Clock, ShieldCheck, GitCommit, Database, Zap } from "lucide-react";
+import { Activity, Clock, ShieldCheck, GitCommit, Database, Zap, Radio } from "lucide-react";
+import { playPaperRustle } from "../utils/sound";
 
 export default function Telemetry({ visitorCount }) {
   const telemetryItems = [
@@ -8,7 +9,7 @@ export default function Telemetry({ visitorCount }) {
       label: "LIVE AUDIT & VISITS",
       value: visitorCount !== null ? `${visitorCount}` : "SYNCING",
       subtext: "Persisted in Amazon DynamoDB via Atomic Increment",
-      icon: <Activity className="w-5 h-5 text-emerald-700" />,
+      icon: <Radio className="w-5 h-5 text-emerald-700 animate-pulse" />,
       live: true
     },
     {
@@ -67,7 +68,10 @@ export default function Telemetry({ visitorCount }) {
                 <div className="text-3xl sm:text-4xl font-editorial-title font-black text-[var(--ink-black)] mb-2 flex items-center gap-2">
                   <span>{item.value}</span>
                   {item.live && (
-                    <span className="inline-block w-2.5 h-2.5 rounded-full bg-emerald-600 animate-pulse"></span>
+                    <span className="relative flex h-3.5 w-3.5 items-center justify-center ml-1">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                      <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-600"></span>
+                    </span>
                   )}
                 </div>
               </div>
