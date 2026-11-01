@@ -128,3 +128,50 @@ export function playStampThud() {
   osc.start(now);
   osc.stop(now + 0.15);
 }
+
+/**
+ * Realistic Paper Tear / Rip effect (ripping parchment paper fibers)
+ */
+export function playPaperTear() {
+  const ctx = getContext();
+  if (!ctx) return;
+
+  const now = ctx.currentTime;
+  const duration = 0.42; // 420ms ripping sound
+  const bufferSize = Math.floor(ctx.sampleRate * duration);
+  const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+  const data = buffer.getChannelData(0);
+
+  // Generate tearing fiber noise with random crackle impulses
+  for (let i = 0; i < bufferSize; i++) {
+    const t = i / bufferSize;
+    let val = (Math.random() * 2 - 1) * Math.sin(t * Math.PI);
+    if (Math.random() < 0.08) {
+      val += (Math.random() * 2 - 1) * 2.2;
+    }
+    data[i] = val * (1 - t * 0.3);
+  }
+
+  const noise = ctx.createBufferSource();
+  noise.buffer = buffer;
+
+  const filter = ctx.createBiquadFilter();
+  filter.type = 'bandpass';
+  filter.frequency.setValueAtTime(1200, now);
+  filter.frequency.exponentialRampToValueAtTime(3400, now + 0.18);
+  filter.frequency.exponentialRampToValueAtTime(950, now + duration);
+  filter.Q.setValueAtTime(3.5, now);
+
+  const gain = ctx.createGain();
+  gain.gain.setValueAtTime(0.01, now);
+  gain.gain.linearRampToValueAtTime(0.25, now + 0.04);
+  gain.gain.exponentialRampToValueAtTime(0.001, now + duration);
+
+  noise.connect(filter);
+  filter.connect(gain);
+  gain.connect(ctx.destination);
+
+  noise.start(now);
+  noise.stop(now + duration + 0.02);
+}
+

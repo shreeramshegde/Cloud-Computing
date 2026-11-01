@@ -8,11 +8,21 @@ import Arsenal from './components/Arsenal';
 import Telemetry from './components/Telemetry';
 import Dispatch from './components/Dispatch';
 import Footer from './components/Footer';
+import PaperTearIntro from './components/PaperTearIntro';
 import { CONFIG } from './config';
 
 export function App() {
   const [visitorCount, setVisitorCount] = useState(null);
   const [isLoadingVisitor, setIsLoadingVisitor] = useState(true);
+  const [showIntro, setShowIntro] = useState(true);
+
+  const triggerRefold = () => {
+    setShowIntro(false);
+    setTimeout(() => {
+      setShowIntro(true);
+      window.scrollTo({ top: 0, behavior: 'instant' });
+    }, 50);
+  };
 
   useEffect(() => {
     async function fetchVisitor() {
@@ -40,9 +50,15 @@ export function App() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-[var(--paper-bg)] text-[var(--ink-black)] flex flex-col font-sans selection:bg-[var(--terracotta)] selection:text-white">
+    <div className="min-h-screen bg-[var(--paper-bg)] text-[var(--ink-black)] flex flex-col font-sans selection:bg-[var(--terracotta)] selection:text-white relative">
+      
+      {/* Interactive Paper Tearing / Unfolding Broadsheet Intro */}
+      {showIntro && (
+        <PaperTearIntro onUnfolded={() => setShowIntro(false)} />
+      )}
+
       {/* Top Header & Gazette Masthead */}
-      <Header visitorCount={visitorCount} />
+      <Header visitorCount={visitorCount} onRefold={triggerRefold} />
 
       {/* Looping Marquee Ticker */}
       <MarqueeTicker />
@@ -58,7 +74,7 @@ export function App() {
       </main>
 
       {/* Colophon & Newspaper Footer */}
-      <Footer />
+      <Footer onRefold={triggerRefold} />
     </div>
   );
 }

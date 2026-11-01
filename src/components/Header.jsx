@@ -4,7 +4,7 @@ import { playTypewriterClick, playPaperRustle, toggleSound, isSoundEnabled } fro
 import { smoothScrollTo } from "../utils/scroll";
 import { Volume2, VolumeX, ArrowUpRight, Radio } from "lucide-react";
 
-export default function Header({ visitorCount }) {
+export default function Header({ visitorCount, onRefold }) {
   const [soundOn, setSoundOn] = useState(false);
   const [currentDate, setCurrentDate] = useState("");
 
@@ -52,6 +52,17 @@ export default function Header({ visitorCount }) {
               {visitorCount !== null ? `VISITORS: ${visitorCount}` : "VISITORS: TELEMETRY ACTIVE"}
             </span>
           </div>
+
+          {/* Re-fold Newspaper Button */}
+          {onRefold && (
+            <button
+              onClick={onRefold}
+              className="hidden sm:flex items-center gap-1 text-[var(--ink-black)] hover:text-[var(--terracotta)] transition-colors cursor-pointer px-1.5 py-0.5 rounded text-[11px] font-bold border border-[var(--border-ink)]"
+              title="Re-fold and tear the broadsheet newspaper cover"
+            >
+              <span>↺ REFOLD</span>
+            </button>
+          )}
 
           {/* Sound Toggle Button */}
           <button
