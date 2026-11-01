@@ -12,10 +12,30 @@ export function App() {
   const [visitorCount, setVisitorCount] = useState(null);
   const [isLoadingVisitor, setIsLoadingVisitor] = useState(true);
 
+  // Zen Theme (Light / Dark) State
+  const [theme, setTheme] = useState(() => {
+    if (typeof window !== 'undefined' && window.localStorage) {
+      const savedTheme = localStorage.getItem('zen-theme');
+      if (savedTheme) return savedTheme;
+      if (window.matchMedia('(prefers-color-scheme: light)').matches) {
+        return 'light';
+      }
+    }
+    return 'dark';
+  });
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('zen-theme', theme);
+  }, [theme]);
+
+  const toggleTheme = () => {
+    setTheme(prev => (prev === 'dark' ? 'light' : 'dark'));
+  };
+
   useEffect(() => {
     async function fetchVisitor() {
       if (!CONFIG.API_BASE_URL || CONFIG.API_BASE_URL === 'YOUR_API_GATEWAY_INVOKE_URL') {
-        // Fallback for local demo preview
         setVisitorCount(42);
         setIsLoadingVisitor(false);
         return;
@@ -43,7 +63,12 @@ export function App() {
 
   return (
     <div className="portfolio-app">
-      <Navbar visitorCount={visitorCount} isLoadingVisitor={isLoadingVisitor} />
+      <Navbar 
+        visitorCount={visitorCount} 
+        isLoadingVisitor={isLoadingVisitor} 
+        theme={theme}
+        onToggleTheme={toggleTheme}
+      />
       <main>
         <Hero />
         <ArchitectureExplorer />

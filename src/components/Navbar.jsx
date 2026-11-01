@@ -1,45 +1,59 @@
 import React from 'react';
-import { Cloud, Activity } from 'lucide-react';
+import { Sun, Moon } from 'lucide-react';
+import { ZenLogo } from './ZenLogo';
 import { GithubIcon } from './GithubIcon';
 import { CONFIG } from '../config';
 
-export function Navbar({ visitorCount, isLoadingVisitor }) {
+export function Navbar({ visitorCount, isLoadingVisitor, theme, onToggleTheme }) {
   return (
     <header className="navbar-wrapper">
       <div className="nav-container">
+        {/* Brand */}
         <a href="#hero" className="nav-brand">
-          <span className="brand-bracket">&lt;</span>
+          <ZenLogo size={24} />
           <span className="brand-name">Shreeram</span>
-          <span className="brand-bracket">/&gt;</span>
-          <span className="brand-badge">AWS Serverless</span>
+          <span className="brand-badge">Serverless</span>
         </a>
 
+        {/* Links */}
         <nav className="nav-links">
           <a href="#about">About</a>
-          <a href="#architecture">AWS Architecture</a>
+          <a href="#architecture">Architecture</a>
           <a href="#skills">Skills</a>
-          <a href="#projects">GitHub Projects</a>
+          <a href="#projects">Projects</a>
           <a href="#contact">Contact</a>
         </nav>
 
+        {/* Actions */}
         <div className="nav-actions">
-          {/* Live Visitor Counter Pill */}
-          <div className="visitor-pill" title="Live visitor counter powered by AWS Lambda & DynamoDB">
+          {/* Live Visitor Pill */}
+          <div className="visitor-pill" title="Live Serverless Counter powered by AWS Lambda & DynamoDB">
             <span className="live-dot"></span>
-            <span className="pill-text">Live Views:</span>
+            <span className="pill-text">Live:</span>
             <span className="pill-count mono">
               {isLoadingVisitor ? '...' : (visitorCount !== null ? visitorCount.toLocaleString() : '1')}
             </span>
           </div>
 
+          {/* Theme Toggle (Zen Light / Dark) */}
+          <button 
+            onClick={onToggleTheme} 
+            className="theme-toggle-btn"
+            title={`Switch to ${theme === 'dark' ? 'Light' : 'Dark'} Mode`}
+            aria-label="Toggle Theme"
+          >
+            {theme === 'dark' ? <Sun size={17} /> : <Moon size={17} />}
+          </button>
+
+          {/* GitHub link */}
           <a 
             href={CONFIG.STUDENT.githubUrl} 
             target="_blank" 
             rel="noopener noreferrer"
-            className="github-btn"
+            className="icon-btn"
             title="GitHub Profile"
           >
-            <GithubIcon size={18} />
+            <GithubIcon size={17} />
           </a>
         </div>
       </div>
@@ -49,14 +63,15 @@ export function Navbar({ visitorCount, isLoadingVisitor }) {
           position: sticky;
           top: 0;
           z-index: 1000;
-          backdrop-filter: blur(20px);
-          background: rgba(10, 14, 23, 0.85);
-          border-bottom: 1px solid var(--border-color);
+          backdrop-filter: blur(16px);
+          -webkit-backdrop-filter: blur(16px);
+          background-color: var(--nav-backdrop);
+          border-bottom: 1px solid var(--border-subtle);
           padding: 14px 0;
         }
 
         .nav-container {
-          max-width: 1180px;
+          max-width: 1140px;
           margin: 0 auto;
           padding: 0 24px;
           display: flex;
@@ -67,33 +82,31 @@ export function Navbar({ visitorCount, isLoadingVisitor }) {
         .nav-brand {
           display: flex;
           align-items: center;
-          gap: 6px;
+          gap: 10px;
           text-decoration: none;
           color: var(--text-primary);
-          font-family: var(--font-mono);
-          font-size: 1.15rem;
           font-weight: 700;
+          font-size: 1.1rem;
+          letter-spacing: -0.02em;
         }
 
-        .brand-bracket {
-          color: var(--accent-cyan);
+        .brand-name {
+          font-weight: 800;
         }
 
         .brand-badge {
-          font-size: 0.65rem;
-          text-transform: uppercase;
-          background: rgba(56, 189, 248, 0.12);
-          color: var(--accent-cyan);
-          border: 1px solid rgba(56, 189, 248, 0.3);
-          padding: 2px 8px;
+          font-size: 0.7rem;
+          font-weight: 600;
+          color: var(--coral-primary);
+          background: var(--coral-soft);
+          border: 1px solid var(--coral-border);
+          padding: 2px 10px;
           border-radius: 9999px;
-          letter-spacing: 0.5px;
-          margin-left: 8px;
         }
 
         .nav-links {
           display: flex;
-          gap: 28px;
+          gap: 24px;
         }
 
         .nav-links a {
@@ -101,37 +114,37 @@ export function Navbar({ visitorCount, isLoadingVisitor }) {
           text-decoration: none;
           font-size: 0.9rem;
           font-weight: 500;
-          transition: color 0.2s;
+          transition: color 0.15s;
         }
 
         .nav-links a:hover {
-          color: var(--accent-cyan);
+          color: var(--coral-primary);
         }
 
         .nav-actions {
           display: flex;
           align-items: center;
-          gap: 12px;
+          gap: 10px;
         }
 
         .visitor-pill {
           display: flex;
           align-items: center;
-          gap: 8px;
-          background: rgba(15, 23, 42, 0.9);
-          border: 1px solid rgba(56, 189, 248, 0.25);
-          padding: 5px 14px;
+          gap: 7px;
+          background: var(--pill-bg);
+          border: 1px solid var(--border-subtle);
+          padding: 6px 14px;
           border-radius: 9999px;
           font-size: 0.82rem;
         }
 
         .live-dot {
-          width: 8px;
-          height: 8px;
+          width: 7px;
+          height: 7px;
           border-radius: 50%;
-          background: #22c55e;
-          box-shadow: 0 0 10px #22c55e;
-          animation: pulse 2s infinite;
+          background: #10b981;
+          box-shadow: 0 0 8px #10b981;
+          animation: pulseGlow 2s infinite;
         }
 
         .pill-text {
@@ -139,30 +152,33 @@ export function Navbar({ visitorCount, isLoadingVisitor }) {
         }
 
         .pill-count {
-          color: var(--accent-cyan);
+          color: var(--text-primary);
           font-weight: 700;
         }
 
-        .github-btn {
+        .theme-toggle-btn,
+        .icon-btn {
           color: var(--text-secondary);
-          background: rgba(255, 255, 255, 0.05);
-          border: 1px solid var(--border-color);
+          background: var(--pill-bg);
+          border: 1px solid var(--border-subtle);
           padding: 8px;
-          border-radius: 8px;
+          border-radius: 9999px;
           display: flex;
           align-items: center;
           justify-content: center;
+          cursor: pointer;
           transition: all 0.2s;
         }
 
-        .github-btn:hover {
-          color: var(--text-primary);
-          border-color: var(--border-hover);
-          background: rgba(255, 255, 255, 0.1);
+        .theme-toggle-btn:hover,
+        .icon-btn:hover {
+          color: var(--coral-primary);
+          border-color: var(--coral-border);
+          background: var(--coral-soft);
           transform: translateY(-1px);
         }
 
-        @media (max-width: 860px) {
+        @media (max-width: 820px) {
           .nav-links {
             display: none;
           }

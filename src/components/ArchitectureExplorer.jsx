@@ -11,8 +11,9 @@ import {
   Lock, 
   DollarSign, 
   FileCode,
+  ServerOff,
   CheckCircle2,
-  ServerOff
+  Sparkles
 } from 'lucide-react';
 
 const SERVICES = [
@@ -159,85 +160,85 @@ export function ArchitectureExplorer() {
     : SERVICES.filter(s => s.category === selectedFilter);
 
   return (
-    <section id="architecture" className="section section-dark">
+    <section id="architecture" className="section section-paper">
       <div className="container">
         <div className="section-header">
-          <span className="section-badge">System Design & Cloud Services</span>
-          <h2 className="section-title">AWS Serverless Architecture Explorer</h2>
+          <span className="section-badge">System Architecture</span>
+          <h2 className="section-title">Minimalist Cloud Infrastructure</h2>
           <p className="section-desc">
-            Explore how 14 native AWS services interconnect to power this portfolio with zero EC2 servers, enterprise-grade security, and zero operating cost.
+            Explore how 14 native AWS services coordinate seamlessly with zero virtual machines, enterprise-grade security, and zero monthly hosting cost.
           </p>
         </div>
 
         {/* Filter Pills */}
-        <div className="filter-pill-group">
+        <div className="filter-pill-bar">
           {['all', 'storage', 'backend', 'database', 'devops', 'security', 'monitoring'].map((cat) => (
             <button
               key={cat}
-              className={`filter-btn ${selectedFilter === cat ? 'active' : ''}`}
+              className={`pill-btn ${selectedFilter === cat ? 'active' : ''}`}
               onClick={() => setSelectedFilter(cat)}
             >
-              {cat === 'all' ? 'All Services (14)' : cat.charAt(0).toUpperCase() + cat.slice(1)}
+              {cat === 'all' ? 'All (14)' : cat.charAt(0).toUpperCase() + cat.slice(1)}
             </button>
           ))}
         </div>
 
-        {/* Main Grid & Deep Dive Layout */}
-        <div className="arch-layout">
-          {/* Services Grid */}
-          <div className="services-selector-grid">
+        {/* Bento Split Layout */}
+        <div className="zen-bento-layout">
+          {/* Service Cards Grid */}
+          <div className="zen-bento-grid">
             {filteredServices.map((service) => {
               const Icon = service.icon;
               const isSelected = activeService.id === service.id;
               return (
                 <div
                   key={service.id}
-                  className={`service-card ${isSelected ? 'selected' : ''}`}
+                  className={`zen-card ${isSelected ? 'selected' : ''}`}
                   onClick={() => setActiveService(service)}
                 >
-                  <div className="service-card-top">
-                    <div className="service-icon-box">
-                      <Icon size={20} />
+                  <div className="zen-card-top">
+                    <div className="zen-icon-box">
+                      <Icon size={18} />
                     </div>
-                    <span className="service-category-badge">{service.category}</span>
+                    <span className="zen-category-tag">{service.category}</span>
                   </div>
-                  <h4 className="service-card-name">{service.name}</h4>
-                  <p className="service-card-tagline">{service.tagline}</p>
+                  <h4 className="zen-card-title">{service.name}</h4>
+                  <p className="zen-card-desc">{service.tagline}</p>
                 </div>
               );
             })}
           </div>
 
-          {/* Active Service Deep Dive Details */}
-          <div className="active-service-panel">
-            <div className="panel-header">
-              <div className="panel-icon-wrap">
-                {React.createElement(activeService.icon, { size: 28 })}
+          {/* Active Detail Panel */}
+          <div className="zen-detail-panel">
+            <div className="panel-top">
+              <div className="panel-icon-circle">
+                {React.createElement(activeService.icon, { size: 24 })}
               </div>
               <div>
-                <span className="panel-category">{activeService.category.toUpperCase()}</span>
-                <h3 className="panel-title">{activeService.name}</h3>
-                <p className="panel-tagline">{activeService.tagline}</p>
+                <span className="panel-badge-category">{activeService.category.toUpperCase()}</span>
+                <h3 className="panel-service-name">{activeService.name}</h3>
+                <p className="panel-service-tagline">{activeService.tagline}</p>
               </div>
             </div>
 
-            <div className="panel-body">
-              <div className="detail-block">
+            <div className="panel-content">
+              <div className="zen-info-block">
                 <h5>Role in this Architecture</h5>
                 <p>{activeService.description}</p>
               </div>
 
-              <div className="detail-block">
+              <div className="zen-info-block">
                 <h5>Why Chosen Over Alternatives</h5>
                 <p>{activeService.whyChosen}</p>
               </div>
 
-              <div className="detail-block highlight">
-                <h5>Security & IAM Hardening</h5>
+              <div className="zen-info-block zen-callout">
+                <h5>Security &amp; IAM Hardening</h5>
                 <p>{activeService.securityNote}</p>
               </div>
 
-              <div className="detail-block cost">
+              <div className="zen-info-block zen-cost-box">
                 <h5>AWS Free Tier Optimization</h5>
                 <p>{activeService.cost}</p>
               </div>
@@ -247,205 +248,209 @@ export function ArchitectureExplorer() {
       </div>
 
       <style>{`
-        .filter-pill-group {
+        .filter-pill-bar {
           display: flex;
           justify-content: center;
           flex-wrap: wrap;
-          gap: 10px;
-          margin-bottom: 40px;
+          gap: 8px;
+          margin-bottom: 38px;
         }
 
-        .filter-btn {
-          background: rgba(255, 255, 255, 0.04);
-          border: 1px solid var(--border-color);
+        .pill-btn {
+          background: var(--pill-bg);
+          border: 1px solid var(--border-subtle);
           color: var(--text-secondary);
           padding: 8px 18px;
           border-radius: 9999px;
-          font-size: 0.85rem;
+          font-size: 0.84rem;
           font-weight: 500;
           cursor: pointer;
           transition: all 0.2s;
         }
 
-        .filter-btn:hover {
+        .pill-btn:hover {
           color: var(--text-primary);
           border-color: var(--border-hover);
         }
 
-        .filter-btn.active {
-          background: rgba(56, 189, 248, 0.15);
-          color: var(--accent-cyan);
-          border-color: var(--accent-cyan);
+        .pill-btn.active {
+          background: var(--coral-soft);
+          color: var(--coral-primary);
+          border-color: var(--coral-border);
           font-weight: 600;
         }
 
-        .arch-layout {
+        .zen-bento-layout {
           display: grid;
-          grid-template-columns: 1fr 1fr;
-          gap: 32px;
+          grid-template-columns: 1.15fr 1fr;
+          gap: 28px;
           align-items: start;
         }
 
-        .services-selector-grid {
+        .zen-bento-grid {
           display: grid;
-          grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-          gap: 16px;
+          grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+          gap: 14px;
           max-height: 580px;
           overflow-y: auto;
-          padding-right: 8px;
+          padding-right: 6px;
         }
 
-        .service-card {
+        .zen-card {
           background: var(--bg-card);
-          border: 1px solid var(--border-color);
-          border-radius: 12px;
-          padding: 18px;
+          border: 1px solid var(--border-subtle);
+          border-radius: 18px;
+          padding: 20px;
           cursor: pointer;
-          transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+          transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+          box-shadow: var(--card-shadow);
         }
 
-        .service-card:hover {
+        .zen-card:hover {
           border-color: var(--border-hover);
           background: var(--bg-card-hover);
           transform: translateY(-2px);
+          box-shadow: var(--card-shadow-hover);
         }
 
-        .service-card.selected {
-          border-color: var(--accent-cyan);
-          background: rgba(56, 189, 248, 0.08);
-          box-shadow: 0 0 20px rgba(56, 189, 248, 0.15);
+        .zen-card.selected {
+          border-color: var(--coral-primary);
+          background: var(--coral-soft);
+          box-shadow: 0 4px 20px -2px var(--coral-soft);
         }
 
-        .service-card-top {
+        .zen-card-top {
           display: flex;
           justify-content: space-between;
           align-items: center;
           margin-bottom: 12px;
         }
 
-        .service-icon-box {
-          color: var(--accent-cyan);
-          background: rgba(56, 189, 248, 0.1);
+        .zen-icon-box {
+          color: var(--coral-primary);
+          background: var(--pill-bg);
           padding: 8px;
-          border-radius: 8px;
+          border-radius: 12px;
           display: flex;
           align-items: center;
           justify-content: center;
         }
 
-        .service-category-badge {
-          font-size: 0.65rem;
+        .zen-category-tag {
+          font-size: 0.68rem;
           text-transform: uppercase;
           color: var(--text-muted);
-          font-family: var(--font-mono);
+          font-weight: 600;
           letter-spacing: 0.5px;
         }
 
-        .service-card-name {
-          font-size: 1rem;
+        .zen-card-title {
+          font-size: 1.05rem;
           font-weight: 700;
-          margin-bottom: 4px;
           color: var(--text-primary);
+          margin-bottom: 4px;
+          letter-spacing: -0.01em;
         }
 
-        .service-card-tagline {
-          font-size: 0.78rem;
+        .zen-card-desc {
+          font-size: 0.8rem;
           color: var(--text-secondary);
-          line-height: 1.4;
+          line-height: 1.45;
         }
 
-        .active-service-panel {
+        .zen-detail-panel {
           background: var(--bg-card);
-          border: 1px solid var(--border-hover);
-          border-radius: 18px;
+          border: 1px solid var(--border-subtle);
+          border-radius: 24px;
           padding: 32px;
           position: sticky;
           top: 90px;
           box-shadow: var(--card-shadow);
         }
 
-        .panel-header {
+        .panel-top {
           display: flex;
           align-items: center;
-          gap: 18px;
-          padding-bottom: 24px;
-          border-bottom: 1px solid var(--border-color);
-          margin-bottom: 24px;
+          gap: 16px;
+          padding-bottom: 22px;
+          border-bottom: 1px solid var(--border-subtle);
+          margin-bottom: 22px;
         }
 
-        .panel-icon-wrap {
-          color: var(--accent-cyan);
-          background: rgba(56, 189, 248, 0.12);
-          border: 1px solid rgba(56, 189, 248, 0.25);
-          padding: 16px;
-          border-radius: 14px;
+        .panel-icon-circle {
+          color: var(--coral-primary);
+          background: var(--coral-soft);
+          border: 1px solid var(--coral-border);
+          padding: 14px;
+          border-radius: 18px;
         }
 
-        .panel-category {
+        .panel-badge-category {
           font-size: 0.7rem;
-          letter-spacing: 1.5px;
-          color: var(--accent-cyan);
-          font-family: var(--font-mono);
+          letter-spacing: 1.2px;
+          color: var(--coral-primary);
           font-weight: 700;
         }
 
-        .panel-title {
+        .panel-service-name {
           font-size: 1.6rem;
           font-weight: 800;
+          letter-spacing: -0.02em;
           color: var(--text-primary);
         }
 
-        .panel-tagline {
-          font-size: 0.9rem;
+        .panel-service-tagline {
+          font-size: 0.88rem;
           color: var(--text-secondary);
         }
 
-        .detail-block {
+        .zen-info-block {
           margin-bottom: 20px;
         }
 
-        .detail-block h5 {
-          font-size: 0.8rem;
+        .zen-info-block h5 {
+          font-size: 0.78rem;
           text-transform: uppercase;
-          letter-spacing: 1px;
+          letter-spacing: 0.8px;
           color: var(--text-muted);
           margin-bottom: 6px;
+          font-weight: 700;
         }
 
-        .detail-block p {
+        .zen-info-block p {
           font-size: 0.92rem;
           color: var(--text-secondary);
           line-height: 1.6;
         }
 
-        .detail-block.highlight {
-          background: rgba(99, 102, 241, 0.08);
-          border-left: 3px solid var(--accent-indigo);
+        .zen-callout {
+          background: var(--pill-bg);
+          border-left: 3px solid var(--coral-primary);
           padding: 12px 16px;
-          border-radius: 0 8px 8px 0;
+          border-radius: 0 12px 12px 0;
         }
 
-        .detail-block.highlight h5 {
-          color: #a5b4fc;
+        .zen-callout h5 {
+          color: var(--coral-primary);
         }
 
-        .detail-block.cost {
-          background: rgba(34, 197, 94, 0.08);
-          border-left: 3px solid #22c55e;
+        .zen-cost-box {
+          background: rgba(16, 185, 129, 0.08);
+          border-left: 3px solid #10b981;
           padding: 12px 16px;
-          border-radius: 0 8px 8px 0;
+          border-radius: 0 12px 12px 0;
           margin-bottom: 0;
         }
 
-        .detail-block.cost h5 {
-          color: #86efac;
+        .zen-cost-box h5 {
+          color: #10b981;
         }
 
         @media (max-width: 900px) {
-          .arch-layout {
+          .zen-bento-layout {
             grid-template-columns: 1fr;
           }
-          .services-selector-grid {
+          .zen-bento-grid {
             max-height: 380px;
           }
         }

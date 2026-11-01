@@ -28,17 +28,16 @@ export function ContactForm() {
     e.preventDefault();
     setStatus({ submitting: true, success: false, error: null, message: '' });
 
-    // If API Gateway URL is still placeholder
     if (!CONFIG.API_BASE_URL || CONFIG.API_BASE_URL === 'YOUR_API_GATEWAY_INVOKE_URL') {
       setTimeout(() => {
         setStatus({
           submitting: false,
           success: true,
           error: null,
-          message: 'Frontend Demo Mode: Once you deploy your API Gateway, this will invoke Lambda, insert a record into DynamoDB, and send an instant SNS email alert!'
+          message: 'Frontend Demo: Once deployed to AWS, this dispatches via Lambda to DynamoDB & SNS!'
         });
         setFormData({ name: '', email: '', subject: '', message: '' });
-      }, 900);
+      }, 800);
       return;
     }
 
@@ -58,7 +57,7 @@ export function ContactForm() {
           submitting: false,
           success: true,
           error: null,
-          message: 'Thank you! Your message was securely recorded in Amazon DynamoDB and dispatched via Amazon SNS.'
+          message: 'Thank you! Your message was saved in Amazon DynamoDB and delivered to Shreeram via Amazon SNS.'
         });
         setFormData({ name: '', email: '', subject: '', message: '' });
       } else {
@@ -70,7 +69,7 @@ export function ContactForm() {
         submitting: false,
         success: false,
         error: err.message,
-        message: `Error: ${err.message}. Please check API Gateway status or CORS.`
+        message: `Error: ${err.message}. Please verify API Gateway status.`
       });
     }
   };
@@ -78,47 +77,55 @@ export function ContactForm() {
   return (
     <section id="contact" className="section">
       <div className="container">
-        <div className="contact-grid">
+        <div className="zen-contact-grid">
           {/* Information Column */}
-          <div className="contact-info-col">
-            <span className="section-badge">Direct Communication</span>
-            <h2 className="section-title">Let's Connect</h2>
-            <p className="contact-lead">
-              Have inquiries regarding this serverless architecture, academic experiential learning, or cloud engineering collaborations? Send a serverless dispatch below!
+          <div className="zen-contact-info">
+            <span className="section-badge">Get in Touch</span>
+            <h2 className="section-title">Direct Connection</h2>
+            <p className="zen-contact-lead">
+              Have questions regarding this serverless architecture, experiential learning at NIE Mysuru, or cloud collaborations?
             </p>
 
-            <div className="info-cards">
-              <div className="info-card">
-                <GraduationCap className="info-icon" size={20} />
+            <div className="zen-info-list">
+              <div className="zen-info-item">
+                <div className="zen-item-icon">
+                  <GraduationCap size={18} />
+                </div>
                 <div>
-                  <h5>Academic Institution</h5>
+                  <h6>Academic Institution</h6>
                   <p>{CONFIG.STUDENT.institution}</p>
-                  <p className="sub-meta">{CONFIG.STUDENT.department}</p>
-                  <p className="sub-meta mono">USN: {CONFIG.STUDENT.usn} | Sem: 5</p>
+                  <p className="zen-sub-meta">{CONFIG.STUDENT.department}</p>
+                  <p className="zen-sub-meta mono">USN: {CONFIG.STUDENT.usn} | Sem: 5</p>
                 </div>
               </div>
 
-              <div className="info-card">
-                <UserCheck className="info-icon" size={20} />
+              <div className="zen-info-item">
+                <div className="zen-item-icon">
+                  <UserCheck size={18} />
+                </div>
                 <div>
-                  <h5>Faculty Guide</h5>
+                  <h6>Faculty Guide</h6>
                   <p>{CONFIG.STUDENT.guide}</p>
-                  <p className="sub-meta">Course: {CONFIG.STUDENT.course}</p>
+                  <p className="zen-sub-meta">Course: {CONFIG.STUDENT.course}</p>
                 </div>
               </div>
 
-              <div className="info-card">
-                <Mail className="info-icon" size={20} />
+              <div className="zen-info-item">
+                <div className="zen-item-icon">
+                  <Mail size={18} />
+                </div>
                 <div>
-                  <h5>Direct Email</h5>
+                  <h6>Institutional Email</h6>
                   <p className="mono">{CONFIG.STUDENT.email}</p>
                 </div>
               </div>
 
-              <div className="info-card">
-                <MapPin className="info-icon" size={20} />
+              <div className="zen-info-item">
+                <div className="zen-item-icon">
+                  <MapPin size={18} />
+                </div>
                 <div>
-                  <h5>Location</h5>
+                  <h6>Location</h6>
                   <p>Mysuru, Karnataka, India</p>
                 </div>
               </div>
@@ -126,257 +133,256 @@ export function ContactForm() {
           </div>
 
           {/* Form Column */}
-          <div className="contact-form-col">
-            <div className="form-card">
-              <h3 className="form-title">Send a Serverless Message</h3>
-              <p className="form-subtitle">
-                Payload routes via <strong>Amazon API Gateway &rarr; AWS Lambda &rarr; DynamoDB &amp; SNS</strong>.
-              </p>
+          <div className="zen-form-card">
+            <h3 className="zen-form-title">Send a Serverless Message</h3>
+            <p className="zen-form-desc">
+              Routes via <strong>API Gateway &rarr; AWS Lambda &rarr; DynamoDB &amp; SNS</strong>.
+            </p>
 
-              <form onSubmit={handleSubmit} className="actual-form">
-                <div className="form-row">
-                  <div className="form-group">
-                    <label htmlFor="name">Your Name</label>
-                    <input 
-                      type="text" 
-                      id="name" 
-                      name="name" 
-                      required 
-                      value={formData.name} 
-                      onChange={handleChange}
-                      placeholder="Jane Doe" 
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label htmlFor="email">Your Email</label>
-                    <input 
-                      type="email" 
-                      id="email" 
-                      name="email" 
-                      required 
-                      value={formData.email} 
-                      onChange={handleChange}
-                      placeholder="jane@example.com" 
-                    />
-                  </div>
-                </div>
-
-                <div className="form-group">
-                  <label htmlFor="subject">Subject</label>
+            <form onSubmit={handleSubmit} className="zen-form">
+              <div className="zen-form-row">
+                <div className="zen-field">
+                  <label htmlFor="name">Your Name</label>
                   <input 
                     type="text" 
-                    id="subject" 
-                    name="subject" 
-                    value={formData.subject} 
+                    id="name" 
+                    name="name" 
+                    required 
+                    value={formData.name} 
                     onChange={handleChange}
-                    placeholder="Project Inquiry / Cloud Computing" 
+                    placeholder="Jane Doe" 
                   />
                 </div>
-
-                <div className="form-group">
-                  <label htmlFor="message">Message</label>
-                  <textarea 
-                    id="message" 
-                    name="message" 
-                    rows={4} 
+                <div className="zen-field">
+                  <label htmlFor="email">Your Email</label>
+                  <input 
+                    type="email" 
+                    id="email" 
+                    name="email" 
                     required 
-                    value={formData.message} 
+                    value={formData.email} 
                     onChange={handleChange}
-                    placeholder="Your inquiry or feedback..."
-                  ></textarea>
+                    placeholder="jane@example.com" 
+                  />
                 </div>
+              </div>
 
-                <button 
-                  type="submit" 
-                  disabled={status.submitting} 
-                  className="btn btn-primary submit-btn"
-                >
-                  {status.submitting ? (
-                    <>
-                      <RefreshCw className="spin-icon" size={16} />
-                      Processing on AWS Lambda...
-                    </>
-                  ) : (
-                    <>
-                      <Send size={16} />
-                      Send Serverless Dispatch
-                    </>
-                  )}
-                </button>
+              <div className="zen-field">
+                <label htmlFor="subject">Subject</label>
+                <input 
+                  type="text" 
+                  id="subject" 
+                  name="subject" 
+                  value={formData.subject} 
+                  onChange={handleChange}
+                  placeholder="Cloud Computing / Collaboration" 
+                />
+              </div>
 
-                {status.success && (
-                  <div className="alert alert-success">
-                    <CheckCircle2 size={18} />
-                    <span>{status.message}</span>
-                  </div>
+              <div className="zen-field">
+                <label htmlFor="message">Message</label>
+                <textarea 
+                  id="message" 
+                  name="message" 
+                  rows={4} 
+                  required 
+                  value={formData.message} 
+                  onChange={handleChange}
+                  placeholder="Type your message here..."
+                ></textarea>
+              </div>
+
+              <button 
+                type="submit" 
+                disabled={status.submitting} 
+                className="btn btn-primary zen-submit-btn"
+              >
+                {status.submitting ? (
+                  <>
+                    <RefreshCw className="spin-icon" size={16} />
+                    Processing on AWS...
+                  </>
+                ) : (
+                  <>
+                    <Send size={16} />
+                    Send Serverless Dispatch
+                  </>
                 )}
+              </button>
 
-                {status.error && (
-                  <div className="alert alert-error">
-                    <AlertCircle size={18} />
-                    <span>{status.message}</span>
-                  </div>
-                )}
-              </form>
-            </div>
+              {status.success && (
+                <div className="zen-alert zen-alert-success">
+                  <CheckCircle2 size={18} />
+                  <span>{status.message}</span>
+                </div>
+              )}
+
+              {status.error && (
+                <div className="zen-alert zen-alert-error">
+                  <AlertCircle size={18} />
+                  <span>{status.message}</span>
+                </div>
+              )}
+            </form>
           </div>
         </div>
       </div>
 
       <style>{`
-        .contact-grid {
+        .zen-contact-grid {
           display: grid;
           grid-template-columns: 1fr 1.25fr;
           gap: 48px;
           align-items: start;
         }
 
-        .contact-lead {
+        .zen-contact-lead {
           font-size: 1.05rem;
           color: var(--text-secondary);
           line-height: 1.7;
-          margin-bottom: 32px;
+          margin-bottom: 30px;
         }
 
-        .info-cards {
+        .zen-info-list {
           display: flex;
           flex-direction: column;
-          gap: 16px;
+          gap: 14px;
         }
 
-        .info-card {
+        .zen-info-item {
           display: flex;
           align-items: flex-start;
-          gap: 16px;
+          gap: 14px;
           background: var(--bg-card);
-          border: 1px solid var(--border-color);
-          border-radius: 12px;
-          padding: 18px 20px;
+          border: 1px solid var(--border-subtle);
+          border-radius: 16px;
+          padding: 16px 20px;
+          box-shadow: var(--card-shadow);
         }
 
-        .info-icon {
-          color: var(--accent-cyan);
-          background: rgba(56, 189, 248, 0.1);
+        .zen-item-icon {
+          color: var(--coral-primary);
+          background: var(--coral-soft);
+          border: 1px solid var(--coral-border);
           padding: 8px;
-          border-radius: 8px;
+          border-radius: 10px;
           flex-shrink: 0;
-          box-sizing: content-box;
         }
 
-        .info-card h5 {
-          font-size: 0.9rem;
+        .zen-info-item h6 {
+          font-size: 0.85rem;
           color: var(--text-primary);
+          font-weight: 700;
           margin-bottom: 2px;
         }
 
-        .info-card p {
+        .zen-info-item p {
           font-size: 0.88rem;
           color: var(--text-secondary);
         }
 
-        .sub-meta {
+        .zen-sub-meta {
           font-size: 0.78rem !important;
           color: var(--text-muted) !important;
-          margin-top: 2px;
         }
 
-        .form-card {
+        .zen-form-card {
           background: var(--bg-card);
-          border: 1px solid var(--border-color);
-          border-radius: 18px;
+          border: 1px solid var(--border-subtle);
+          border-radius: 24px;
           padding: 36px;
           box-shadow: var(--card-shadow);
         }
 
-        .form-title {
-          font-size: 1.45rem;
+        .zen-form-title {
+          font-size: 1.4rem;
           font-weight: 700;
-          margin-bottom: 6px;
+          letter-spacing: -0.01em;
+          margin-bottom: 4px;
         }
 
-        .form-subtitle {
+        .zen-form-desc {
           font-size: 0.88rem;
           color: var(--text-secondary);
-          margin-bottom: 28px;
+          margin-bottom: 26px;
         }
 
-        .actual-form {
+        .zen-form {
           display: flex;
           flex-direction: column;
-          gap: 20px;
+          gap: 18px;
         }
 
-        .form-row {
+        .zen-form-row {
           display: grid;
           grid-template-columns: 1fr 1fr;
           gap: 16px;
         }
 
-        .form-group {
+        .zen-field {
           display: flex;
           flex-direction: column;
-          gap: 8px;
+          gap: 6px;
         }
 
-        .form-group label {
-          font-size: 0.85rem;
+        .zen-field label {
+          font-size: 0.82rem;
           font-weight: 600;
           color: var(--text-secondary);
         }
 
-        .form-group input,
-        .form-group textarea {
+        .zen-field input,
+        .zen-field textarea {
           width: 100%;
-          background: rgba(10, 14, 23, 0.7);
-          border: 1px solid var(--border-color);
-          border-radius: 10px;
+          background: var(--bg-paper);
+          border: 1px solid var(--border-subtle);
+          border-radius: 12px;
           padding: 12px 16px;
           color: var(--text-primary);
-          font-family: var(--font-sans);
+          font-family: inherit;
           font-size: 0.92rem;
-          transition: all 0.2s;
+          transition: border-color 0.15s, box-shadow 0.15s;
         }
 
-        .form-group input:focus,
-        .form-group textarea:focus {
+        .zen-field input:focus,
+        .zen-field textarea:focus {
           outline: none;
-          border-color: var(--accent-cyan);
-          box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.15);
+          border-color: var(--coral-primary);
+          box-shadow: 0 0 0 3px var(--coral-soft);
         }
 
-        .submit-btn {
+        .zen-submit-btn {
           width: 100%;
-          justify-content: center;
           padding: 14px;
+          font-size: 0.95rem;
         }
 
-        .alert {
+        .zen-alert {
           display: flex;
           align-items: flex-start;
-          gap: 12px;
+          gap: 10px;
           padding: 14px 18px;
-          border-radius: 10px;
+          border-radius: 14px;
           font-size: 0.88rem;
-          line-height: 1.5;
         }
 
-        .alert-success {
-          background: rgba(34, 197, 94, 0.12);
-          border: 1px solid rgba(34, 197, 94, 0.3);
-          color: #4ade80;
+        .zen-alert-success {
+          background: rgba(16, 185, 129, 0.1);
+          border: 1px solid rgba(16, 185, 129, 0.25);
+          color: #10b981;
         }
 
-        .alert-error {
-          background: rgba(239, 68, 68, 0.12);
-          border: 1px solid rgba(239, 68, 68, 0.3);
-          color: #f87171;
+        .zen-alert-error {
+          background: rgba(239, 68, 68, 0.1);
+          border: 1px solid rgba(239, 68, 68, 0.25);
+          color: #ef4444;
         }
 
         @media (max-width: 860px) {
-          .contact-grid {
+          .zen-contact-grid {
             grid-template-columns: 1fr;
           }
-          .form-row {
+          .zen-form-row {
             grid-template-columns: 1fr;
           }
         }

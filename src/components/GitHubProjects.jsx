@@ -54,7 +54,7 @@ export function GitHubProjects() {
     async function fetchRepos() {
       try {
         const res = await fetch(`https://api.github.com/users/${CONFIG.STUDENT.githubUsername}/repos?sort=updated&per_page=6`);
-        if (!res.ok) throw new Error('GitHub API rate limit or error');
+        if (!res.ok) throw new Error('GitHub API rate limit');
         const data = await res.json();
         if (Array.isArray(data) && data.length > 0) {
           setRepos(data);
@@ -75,52 +75,54 @@ export function GitHubProjects() {
     <section id="projects" className="section">
       <div className="container">
         <div className="section-header">
-          <span className="section-badge">Live GitHub Showcase</span>
-          <h2 className="section-title">Open Source & Projects</h2>
+          <span className="section-badge">Open Source Work</span>
+          <h2 className="section-title">Featured GitHub Projects</h2>
           <p className="section-desc">
-            Directly synced from <a href={CONFIG.STUDENT.githubUrl} target="_blank" rel="noreferrer" className="inline-link">@shreeramshegde</a> on GitHub.
+            Directly synced from <a href={CONFIG.STUDENT.githubUrl} target="_blank" rel="noreferrer" className="zen-link">@shreeramshegde</a> on GitHub.
           </p>
         </div>
 
         {loading ? (
-          <div className="loading-state">
-            <RefreshCw className="spin-icon" size={24} />
-            <span>Fetching repositories from GitHub...</span>
+          <div className="zen-loading">
+            <RefreshCw className="spin-icon" size={20} />
+            <span>Syncing repositories from GitHub...</span>
           </div>
         ) : (
-          <div className="repos-grid">
+          <div className="zen-repos-grid">
             {repos.map((repo) => (
-              <div key={repo.id} className="repo-card">
-                <div className="repo-header">
-                  <div className="repo-title-wrap">
-                    <Code2 size={18} className="repo-code-icon" />
-                    <h4 className="repo-name">{repo.name}</h4>
+              <div key={repo.id} className="zen-repo-card">
+                <div>
+                  <div className="repo-top">
+                    <div className="repo-title-box">
+                      <Code2 size={16} className="code-icon" />
+                      <h4 className="repo-name">{repo.name}</h4>
+                    </div>
+                    <a 
+                      href={repo.html_url} 
+                      target="_blank" 
+                      rel="noreferrer"
+                      className="repo-link-btn"
+                      title="Open on GitHub"
+                    >
+                      <ExternalLink size={15} />
+                    </a>
                   </div>
-                  <a 
-                    href={repo.html_url} 
-                    target="_blank" 
-                    rel="noreferrer"
-                    className="repo-ext-link"
-                    title="View on GitHub"
-                  >
-                    <ExternalLink size={16} />
-                  </a>
+
+                  <p className="repo-desc">
+                    {repo.description || 'Public repository by Shreeram S Hegde.'}
+                  </p>
                 </div>
 
-                <p className="repo-desc">
-                  {repo.description || 'Public repository by Shreeram S Hegde.'}
-                </p>
-
-                <div className="repo-meta">
+                <div className="repo-bottom">
                   {repo.language && (
-                    <span className="repo-lang">
-                      <span className="lang-dot"></span>
+                    <span className="lang-tag">
+                      <span className="lang-circle"></span>
                       {repo.language}
                     </span>
                   )}
-                  <div className="repo-stats">
-                    <span title="Stars"><Star size={14} /> {repo.stargazers_count}</span>
-                    <span title="Forks"><GitFork size={14} /> {repo.forks_count}</span>
+                  <div className="stat-tags">
+                    <span><Star size={13} /> {repo.stargazers_count}</span>
+                    <span><GitFork size={13} /> {repo.forks_count}</span>
                   </div>
                 </div>
               </div>
@@ -128,141 +130,146 @@ export function GitHubProjects() {
           </div>
         )}
 
-        <div className="view-more-wrap">
+        <div className="view-more-container">
           <a 
             href={CONFIG.STUDENT.githubUrl} 
             target="_blank" 
             rel="noreferrer"
             className="btn btn-secondary"
           >
-            <GithubIcon size={18} />
-            View All Repositories on GitHub
+            <GithubIcon size={16} />
+            View All on GitHub
           </a>
         </div>
       </div>
 
       <style>{`
-        .inline-link {
-          color: var(--accent-cyan);
+        .zen-link {
+          color: var(--coral-primary);
           text-decoration: underline;
+          text-underline-offset: 3px;
         }
 
-        .loading-state {
+        .zen-loading {
           display: flex;
           align-items: center;
           justify-content: center;
-          gap: 12px;
-          color: var(--text-secondary);
+          gap: 10px;
+          color: var(--text-muted);
           padding: 60px 0;
+          font-size: 0.92rem;
         }
 
         .spin-icon {
           animation: spin 1s linear infinite;
-          color: var(--accent-cyan);
+          color: var(--coral-primary);
         }
 
-        .repos-grid {
+        .zen-repos-grid {
           display: grid;
-          grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-          gap: 24px;
-          margin-bottom: 40px;
+          grid-template-columns: repeat(auto-fill, minmax(330px, 1fr));
+          gap: 20px;
+          margin-bottom: 36px;
         }
 
-        .repo-card {
+        .zen-repo-card {
           background: var(--bg-card);
-          border: 1px solid var(--border-color);
-          border-radius: 14px;
+          border: 1px solid var(--border-subtle);
+          border-radius: 20px;
           padding: 24px;
           display: flex;
           flex-direction: column;
           justify-content: space-between;
-          transition: all 0.25s ease;
-        }
-
-        .repo-card:hover {
-          border-color: var(--border-hover);
-          transform: translateY(-4px);
           box-shadow: var(--card-shadow);
+          transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        .repo-header {
+        .zen-repo-card:hover {
+          border-color: var(--border-hover);
+          transform: translateY(-2px);
+          box-shadow: var(--card-shadow-hover);
+        }
+
+        .repo-top {
           display: flex;
           align-items: center;
           justify-content: space-between;
-          margin-bottom: 14px;
+          margin-bottom: 12px;
         }
 
-        .repo-title-wrap {
+        .repo-title-box {
           display: flex;
           align-items: center;
           gap: 8px;
         }
 
-        .repo-code-icon {
-          color: var(--accent-cyan);
+        .code-icon {
+          color: var(--coral-primary);
         }
 
         .repo-name {
-          font-size: 1.15rem;
+          font-size: 1.1rem;
           font-weight: 700;
           color: var(--text-primary);
+          letter-spacing: -0.01em;
           font-family: var(--font-mono);
         }
 
-        .repo-ext-link {
+        .repo-link-btn {
           color: var(--text-muted);
-          transition: color 0.2s;
+          padding: 6px;
+          border-radius: 9999px;
+          transition: color 0.15s, background 0.15s;
         }
 
-        .repo-ext-link:hover {
-          color: var(--accent-cyan);
+        .repo-link-btn:hover {
+          color: var(--coral-primary);
+          background: var(--coral-soft);
         }
 
         .repo-desc {
-          font-size: 0.9rem;
+          font-size: 0.88rem;
           color: var(--text-secondary);
           line-height: 1.6;
-          margin-bottom: 20px;
-          flex-grow: 1;
+          margin-bottom: 24px;
         }
 
-        .repo-meta {
+        .repo-bottom {
           display: flex;
           align-items: center;
           justify-content: space-between;
-          border-top: 1px solid var(--border-color);
+          border-top: 1px solid var(--border-subtle);
           padding-top: 14px;
-          font-size: 0.8rem;
+          font-size: 0.78rem;
           color: var(--text-muted);
         }
 
-        .repo-lang {
+        .lang-tag {
           display: flex;
           align-items: center;
           gap: 6px;
-          font-family: var(--font-mono);
-          color: var(--text-secondary);
+          font-weight: 500;
         }
 
-        .lang-dot {
-          width: 8px;
-          height: 8px;
+        .lang-circle {
+          width: 7px;
+          height: 7px;
           border-radius: 50%;
-          background: var(--accent-indigo);
+          background: var(--coral-primary);
         }
 
-        .repo-stats {
+        .stat-tags {
           display: flex;
-          gap: 14px;
+          gap: 12px;
         }
 
-        .repo-stats span {
+        .stat-tags span {
           display: flex;
           align-items: center;
           gap: 4px;
         }
 
-        .view-more-wrap {
+        .view-more-container {
           text-align: center;
         }
       `}</style>
