@@ -1,11 +1,11 @@
 /**
  * Procedural Vintage Sound Synthesizer via Web Audio API
- * Generates tactile audio micro-interactions (typewriter clicks, paper rustle, stamp thud)
+ * Generates tactile audio micro-interactions (typewriter clicks, paper rustle, stamp thud, paper tear)
  * Zero external media dependencies.
  */
 
 let audioCtx = null;
-let soundEnabled = false;
+let soundEnabled = true; // Default enabled for authentic tactile experience
 
 export function toggleSound(state) {
   if (state !== undefined) {
@@ -77,7 +77,7 @@ export function playPaperRustle() {
   if (!ctx) return;
 
   const now = ctx.currentTime;
-  const bufferSize = ctx.sampleRate * 0.08;
+  const bufferSize = ctx.sampleRate * 0.12;
   const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
   const data = buffer.getChannelData(0);
 
@@ -94,8 +94,8 @@ export function playPaperRustle() {
   filter.Q.setValueAtTime(2.0, now);
 
   const gain = ctx.createGain();
-  gain.gain.setValueAtTime(0.08, now);
-  gain.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
+  gain.gain.setValueAtTime(0.12, now);
+  gain.gain.exponentialRampToValueAtTime(0.001, now + 0.12);
 
   noise.connect(filter);
   filter.connect(gain);
@@ -117,54 +117,60 @@ export function playStampThud() {
 
   osc.type = 'sine';
   osc.frequency.setValueAtTime(140, now);
-  osc.frequency.exponentialRampToValueAtTime(45, now + 0.12);
+  osc.frequency.exponentialRampToValueAtTime(45, now + 0.14);
 
-  gain.gain.setValueAtTime(0.25, now);
-  gain.gain.exponentialRampToValueAtTime(0.001, now + 0.14);
+  gain.gain.setValueAtTime(0.28, now);
+  gain.gain.exponentialRampToValueAtTime(0.001, now + 0.16);
 
   osc.connect(gain);
   gain.connect(ctx.destination);
 
   osc.start(now);
-  osc.stop(now + 0.15);
+  osc.stop(now + 0.17);
 }
 
 /**
- * Realistic Paper Tear / Rip effect (ripping parchment paper fibers)
+ * Realistic Sustained Paper Tear / Rip effect (ripping heavy parchment fibers)
+ * Duration: 1.6 to 1.8 seconds with multi-frequency fiber crackles
  */
-export function playPaperTear() {
+export function playPaperTear(duration = 1.7) {
   const ctx = getContext();
   if (!ctx) return;
 
   const now = ctx.currentTime;
-  const duration = 0.42; // 420ms ripping sound
   const bufferSize = Math.floor(ctx.sampleRate * duration);
   const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
   const data = buffer.getChannelData(0);
 
-  // Generate tearing fiber noise with random crackle impulses
+  // Generate continuous tearing parchment noise with micro-snapping fiber bursts
   for (let i = 0; i < bufferSize; i++) {
     const t = i / bufferSize;
-    let val = (Math.random() * 2 - 1) * Math.sin(t * Math.PI);
-    if (Math.random() < 0.08) {
-      val += (Math.random() * 2 - 1) * 2.2;
+    // Friction base
+    let base = (Math.random() * 2 - 1) * 0.35;
+    // Layered fiber snaps that bunch up during the tear
+    if (Math.random() < 0.06 + 0.05 * Math.sin(t * Math.PI)) {
+      base += (Math.random() * 2 - 1) * (1.9 + Math.random() * 1.4);
     }
-    data[i] = val * (1 - t * 0.3);
+    // Envelope: ramps up smoothly, stays intense during the mid-tear, then settles
+    const envelope = Math.sin(Math.pow(t, 0.8) * Math.PI);
+    data[i] = base * envelope;
   }
 
   const noise = ctx.createBufferSource();
   noise.buffer = buffer;
 
+  // Sweeping dynamic bandpass simulating acoustic tearing opening up
   const filter = ctx.createBiquadFilter();
   filter.type = 'bandpass';
-  filter.frequency.setValueAtTime(1200, now);
-  filter.frequency.exponentialRampToValueAtTime(3400, now + 0.18);
-  filter.frequency.exponentialRampToValueAtTime(950, now + duration);
-  filter.Q.setValueAtTime(3.5, now);
+  filter.frequency.setValueAtTime(800, now);
+  filter.frequency.exponentialRampToValueAtTime(3200, now + duration * 0.45);
+  filter.frequency.exponentialRampToValueAtTime(1050, now + duration);
+  filter.Q.setValueAtTime(2.2, now);
 
   const gain = ctx.createGain();
   gain.gain.setValueAtTime(0.01, now);
-  gain.gain.linearRampToValueAtTime(0.25, now + 0.04);
+  gain.gain.linearRampToValueAtTime(0.28, now + 0.18);
+  gain.gain.setValueAtTime(0.28, now + duration * 0.65);
   gain.gain.exponentialRampToValueAtTime(0.001, now + duration);
 
   noise.connect(filter);
@@ -172,6 +178,5 @@ export function playPaperTear() {
   gain.connect(ctx.destination);
 
   noise.start(now);
-  noise.stop(now + duration + 0.02);
+  noise.stop(now + duration + 0.05);
 }
-
