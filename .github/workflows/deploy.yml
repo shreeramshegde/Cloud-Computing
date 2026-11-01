@@ -9,6 +9,10 @@ on:
 permissions:
   contents: read
 
+env:
+  S3_BUCKET_NAME: "shreeram-portfolio-storage-2026"
+  AWS_DEFAULT_REGION: "ap-southeast-2"
+
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
@@ -39,14 +43,37 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ap-southeast-2
+          aws-region: ${{ env.AWS_DEFAULT_REGION }}
 
       - name: Deploy Static Assets to Amazon S3
         run: |
-          echo "Syncing assets to S3 bucket shreeram-portfolio-storage-2026..."
-          aws s3 sync dist/ s3://shreeram-portfolio-storage-2026 --delete --cache-control "max-age=31536000,public" --exclude "index.html"
-          aws s3 cp dist/index.html s3://shreeram-portfolio-storage-2026/index.html --cache-control "max-age=0,no-cache,no-store,must-revalidate"
+          echo "Syncing assets to S3 bucket ${{ env.S3_BUCKET_NAME }}..."
+          aws s3 sync dist/ s3://${{ env.S3_BUCKET_NAME }} --delete --cache-control "max-age=31536000,public" --exclude "index.html"
+          aws s3 cp dist/index.html s3://${{ env.S3_BUCKET_NAME }}/index.html --cache-control "max-age=0,no-cache,no-store,must-revalidate"
           echo "S3 deployment complete."
+
+      - name: Output Live S3 Website URL to Step Summary & Console
+        run: |
+          WEBSITE_URL="http://${{ env.S3_BUCKET_NAME }}.s3-website-${{ env.AWS_DEFAULT_REGION }}.amazonaws.com"
+          echo "========================================================"
+          echo "🚀 LIVE S3 WEBSITE URL: ${WEBSITE_URL}"
+          echo "========================================================"
+
+          cat <<EOF >> $GITHUB_STEP_SUMMARY
+          # 🚀 Deployment Successful!
+
+          Your serverless React broadsheet portfolio has been compiled and deployed directly to **Amazon S3**.
+
+          ### 🌐 Live Website Access
+          👉 **[Click Here to Open Your Live Portfolio](${WEBSITE_URL})**
+
+          - **Direct URL**: [${WEBSITE_URL}](${WEBSITE_URL})
+          - **AWS S3 Bucket**: \`${{ env.S3_BUCKET_NAME }}\`
+          - **AWS Region**: \`${{ env.AWS_DEFAULT_REGION }}\`
+          - **Commit**: \`${{ github.sha }}\`
+          - **Triggered By**: \`${{ github.actor }}\`
+          - **Deployed At**: \`$(date -u +"%Y-%m-%d %H:%M:%S UTC")\`
+          EOF
 
       - name: Invalidate CloudFront Cache (Optional)
         run: |
