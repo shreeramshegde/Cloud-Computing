@@ -4,7 +4,7 @@
  * Example: "https://xyz123abc.execute-api.ap-south-1.amazonaws.com"
  */
 export const CONFIG = {
-  API_BASE_URL: "YOUR_API_GATEWAY_INVOKE_URL",
+  API_BASE_URL: "https://uvj76g7enc.execute-api.ap-southeast-2.amazonaws.com",
   STUDENT: {
     name: "Shreeram S Hegde",
     usn: "4NI24IS187",
