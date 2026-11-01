@@ -233,6 +233,19 @@ export function Dispatch() {
                 </div>
               </div>
 
+              {/* Authentic Handwritten Signature Plate */}
+              <div className="mb-4 p-3 bg-white/50 border border-[#1d1d1b] flex items-center justify-between">
+                <div>
+                  <div className="font-mono text-[9px] uppercase tracking-wider text-[#1d1d1b]/60">OFFICIAL SIGNATURE</div>
+                  <div className="font-mono text-[11px] font-bold text-[#1d1d1b]">{CONFIG.AUTHOR.name}</div>
+                </div>
+                <img
+                  src="/assets/shreeram_signature_blue.png"
+                  alt="Shreeram S Hegde Authentic Signature"
+                  className="h-10 object-contain drop-shadow-sm"
+                />
+              </div>
+
               {/* Direct Channels */}
               <div className="border-t border-[#1d1d1b]/40 pt-4 space-y-3 font-mono text-xs">
                 

@@ -188,7 +188,7 @@ export default function Hero() {
               </span>
               <span>{CONFIG.AUTHOR.dob}</span>
             </div>
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between border-b border-[var(--border-ink)] pb-2 mb-2">
               <span className="font-bold text-[var(--ink-black)] flex items-center gap-1">
                 <Award className="w-3.5 h-3.5 text-[var(--terracotta)]" />
                 AVAILABILITY
@@ -197,6 +197,18 @@ export default function Hero() {
                 <span className="w-2 h-2 rounded-full bg-emerald-600 animate-ping inline-block"></span>
                 OPEN FOR ARCHITECTURE
               </span>
+            </div>
+
+            {/* Authentic Handcrafted Signature */}
+            <div className="flex items-center justify-between pt-1">
+              <span className="font-mono text-[10px] text-[var(--ink-muted)] uppercase tracking-wider font-bold">
+                SIGNATURE:
+              </span>
+              <img
+                src="/assets/shreeram_signature_blue.png"
+                alt="Shreeram S Hegde Authentic Signature"
+                className="h-9 object-contain drop-shadow-sm"
+              />
             </div>
           </div>
 

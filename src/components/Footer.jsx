@@ -31,9 +31,16 @@ export function Footer() {
               </span>
             </div>
             
-            <h3 className="font-serif text-3xl sm:text-4xl font-black uppercase tracking-tight text-[#1d1d1b]">
-              {CONFIG.AUTHOR.name}
-            </h3>
+            <div className="flex flex-wrap items-center gap-4">
+              <h3 className="font-serif text-3xl sm:text-4xl font-black uppercase tracking-tight text-[#1d1d1b]">
+                {CONFIG.AUTHOR.name}
+              </h3>
+              <img
+                src="/assets/shreeram_signature_blue.png"
+                alt="Shreeram S Hegde Authentic Signature"
+                className="h-10 object-contain drop-shadow-sm"
+              />
+            </div>
 
             <p className="font-mono text-xs text-[#1d1d1b]/80 max-w-md leading-relaxed">
               Arch Guy with deep knowledge of Full-Stack &amp; Spring Boot. Architecting distributed serverless systems on AWS and crafting tactile, paper-grade digital artifacts from Mysuru, Karnataka, India.
