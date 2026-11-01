@@ -1,5 +1,5 @@
 import React from 'react';
-import { Sun, Moon } from 'lucide-react';
+import { Sun, Moon, ArrowUpRight } from 'lucide-react';
 import { ZenLogo } from './ZenLogo';
 import { GithubIcon } from './GithubIcon';
 import { CONFIG } from '../config';
@@ -12,16 +12,16 @@ export function Navbar({ visitorCount, isLoadingVisitor, theme, onToggleTheme })
         <a href="#hero" className="nav-brand">
           <ZenLogo size={24} />
           <span className="brand-name">Shreeram</span>
-          <span className="brand-badge">Serverless</span>
+          <span className="brand-pill">Serverless</span>
         </a>
 
         {/* Links */}
         <nav className="nav-links">
           <a href="#about">About</a>
           <a href="#architecture">Architecture</a>
-          <a href="#skills">Skills</a>
           <a href="#projects">Projects</a>
-          <a href="#contact">Contact</a>
+          <a href="#skills">Skills</a>
+          <a href="#education">Education</a>
         </nav>
 
         {/* Actions */}
@@ -29,13 +29,13 @@ export function Navbar({ visitorCount, isLoadingVisitor, theme, onToggleTheme })
           {/* Live Visitor Pill */}
           <div className="visitor-pill" title="Live Serverless Counter powered by AWS Lambda & DynamoDB">
             <span className="live-dot"></span>
-            <span className="pill-text">Live:</span>
+            <span className="pill-text">Live Views:</span>
             <span className="pill-count mono">
               {isLoadingVisitor ? '...' : (visitorCount !== null ? visitorCount.toLocaleString() : '1')}
             </span>
           </div>
 
-          {/* Theme Toggle (Zen Light / Dark) */}
+          {/* Theme Toggle (Light / Dark) */}
           <button 
             onClick={onToggleTheme} 
             className="theme-toggle-btn"
@@ -55,6 +55,11 @@ export function Navbar({ visitorCount, isLoadingVisitor, theme, onToggleTheme })
           >
             <GithubIcon size={17} />
           </a>
+
+          {/* Contact Pill Button */}
+          <a href="#contact" className="btn btn-primary nav-contact-btn">
+            Contact
+          </a>
         </div>
       </div>
 
@@ -63,15 +68,15 @@ export function Navbar({ visitorCount, isLoadingVisitor, theme, onToggleTheme })
           position: sticky;
           top: 0;
           z-index: 1000;
-          backdrop-filter: blur(16px);
-          -webkit-backdrop-filter: blur(16px);
+          backdrop-filter: blur(20px);
+          -webkit-backdrop-filter: blur(20px);
           background-color: var(--nav-backdrop);
           border-bottom: 1px solid var(--border-subtle);
           padding: 14px 0;
         }
 
         .nav-container {
-          max-width: 1140px;
+          max-width: 1160px;
           margin: 0 auto;
           padding: 0 24px;
           display: flex;
@@ -86,7 +91,7 @@ export function Navbar({ visitorCount, isLoadingVisitor, theme, onToggleTheme })
           text-decoration: none;
           color: var(--text-primary);
           font-weight: 700;
-          font-size: 1.1rem;
+          font-size: 1.15rem;
           letter-spacing: -0.02em;
         }
 
@@ -94,12 +99,14 @@ export function Navbar({ visitorCount, isLoadingVisitor, theme, onToggleTheme })
           font-weight: 800;
         }
 
-        .brand-badge {
-          font-size: 0.7rem;
-          font-weight: 600;
-          color: var(--coral-primary);
-          background: var(--coral-soft);
-          border: 1px solid var(--coral-border);
+        .brand-pill {
+          font-size: 0.68rem;
+          font-weight: 700;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+          color: var(--accent-primary);
+          background: var(--accent-soft);
+          border: 1px solid var(--accent-border);
           padding: 2px 10px;
           border-radius: 9999px;
         }
@@ -118,7 +125,7 @@ export function Navbar({ visitorCount, isLoadingVisitor, theme, onToggleTheme })
         }
 
         .nav-links a:hover {
-          color: var(--coral-primary);
+          color: var(--accent-primary);
         }
 
         .nav-actions {
@@ -142,9 +149,9 @@ export function Navbar({ visitorCount, isLoadingVisitor, theme, onToggleTheme })
           width: 7px;
           height: 7px;
           border-radius: 50%;
-          background: #10b981;
-          box-shadow: 0 0 8px #10b981;
-          animation: pulseGlow 2s infinite;
+          background: var(--emerald);
+          box-shadow: 0 0 10px var(--emerald);
+          animation: pulseRing 2s infinite;
         }
 
         .pill-text {
@@ -172,13 +179,18 @@ export function Navbar({ visitorCount, isLoadingVisitor, theme, onToggleTheme })
 
         .theme-toggle-btn:hover,
         .icon-btn:hover {
-          color: var(--coral-primary);
-          border-color: var(--coral-border);
-          background: var(--coral-soft);
+          color: var(--accent-primary);
+          border-color: var(--accent-border);
+          background: var(--accent-soft);
           transform: translateY(-1px);
         }
 
-        @media (max-width: 820px) {
+        .nav-contact-btn {
+          padding: 8px 18px;
+          font-size: 0.85rem;
+        }
+
+        @media (max-width: 900px) {
           .nav-links {
             display: none;
           }

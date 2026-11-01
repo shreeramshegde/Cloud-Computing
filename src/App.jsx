@@ -2,8 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { Navbar } from './components/Navbar';
 import { Hero } from './components/Hero';
 import { ArchitectureExplorer } from './components/ArchitectureExplorer';
-import { GitHubProjects } from './components/GitHubProjects';
+import { Projects } from './components/Projects';
 import { Skills } from './components/Skills';
+import { Education } from './components/Education';
 import { ContactForm } from './components/ContactForm';
 import { Footer } from './components/Footer';
 import { CONFIG } from './config';
@@ -12,10 +13,10 @@ export function App() {
   const [visitorCount, setVisitorCount] = useState(null);
   const [isLoadingVisitor, setIsLoadingVisitor] = useState(true);
 
-  // Zen Theme (Light / Dark) State
+  // Theme Management (Light vs Dark)
   const [theme, setTheme] = useState(() => {
     if (typeof window !== 'undefined' && window.localStorage) {
-      const savedTheme = localStorage.getItem('zen-theme');
+      const savedTheme = localStorage.getItem('portfolio-theme');
       if (savedTheme) return savedTheme;
       if (window.matchMedia('(prefers-color-scheme: light)').matches) {
         return 'light';
@@ -26,7 +27,7 @@ export function App() {
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
-    localStorage.setItem('zen-theme', theme);
+    localStorage.setItem('portfolio-theme', theme);
   }, [theme]);
 
   const toggleTheme = () => {
@@ -72,8 +73,9 @@ export function App() {
       <main>
         <Hero />
         <ArchitectureExplorer />
-        <GitHubProjects />
+        <Projects />
         <Skills />
+        <Education />
         <ContactForm />
       </main>
       <Footer />

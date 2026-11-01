@@ -8,10 +8,18 @@ on:
 
 permissions:
   contents: read
+  deployments: write
+
+env:
+  S3_BUCKET_NAME: "shreeram-portfolio-storage-2026"
+  AWS_DEFAULT_REGION: "ap-southeast-2"
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+    environment:
+      name: Production
+      url: ${{ steps.get-url.outputs.website_url }}
 
     steps:
       - name: Checkout Repository
@@ -29,24 +37,56 @@ jobs:
       - name: Build React Application
         run: npm run build
 
-      - name: Verify Build Output
+      - name: Verify Production Build
         run: |
-          test -f dist/index.html || { echo "dist/index.html not generated!"; exit 1; }
-          echo "Build verification passed."
+          test -f dist/index.html || { echo "dist/index.html was not generated!"; exit 1; }
+          echo "Build verification passed successfully."
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ap-southeast-2
+          aws-region: ${{ env.AWS_DEFAULT_REGION }}
 
-      - name: Deploy Static Assets to Amazon S3
+      - name: Sync Production Assets to Amazon S3
         run: |
-          echo "Syncing assets to S3 bucket shreeram-portfolio-storage-2026..."
-          aws s3 sync dist/ s3://shreeram-portfolio-storage-2026 --delete --cache-control "max-age=31536000,public" --exclude "index.html"
-          aws s3 cp dist/index.html s3://shreeram-portfolio-storage-2026/index.html --cache-control "max-age=0,no-cache,no-store,must-revalidate"
-          echo "S3 deployment complete."
+          echo "Deploying to S3 bucket: ${{ env.S3_BUCKET_NAME }}..."
+          aws s3 sync dist/ s3://${{ env.S3_BUCKET_NAME }} --delete --cache-control "max-age=31536000,public" --exclude "index.html"
+          aws s3 cp dist/index.html s3://${{ env.S3_BUCKET_NAME }}/index.html --cache-control "max-age=0,no-cache,no-store,must-revalidate"
+          echo "S3 asset synchronization complete."
+
+      - name: Query S3 Website URL from AWS & Generate Job Summary
+        id: get-url
+        run: |
+          # Query the S3 bucket's exact region dynamically from AWS
+          BUCKET_REGION=$(aws s3api get-bucket-location --bucket ${{ env.S3_BUCKET_NAME }} --query "LocationConstraint" --output text 2>/dev/null || echo "")
+          if [ "$BUCKET_REGION" = "None" ] || [ -z "$BUCKET_REGION" ] || [ "$BUCKET_REGION" = "null" ]; then
+            BUCKET_REGION="${{ env.AWS_DEFAULT_REGION }}"
+          fi
+
+          WEBSITE_URL="http://${{ env.S3_BUCKET_NAME }}.s3-website-${BUCKET_REGION}.amazonaws.com"
+          echo "website_url=${WEBSITE_URL}" >> $GITHUB_OUTPUT
+
+          echo "=========================================="
+          echo "Live S3 Website URL: ${WEBSITE_URL}"
+          echo "=========================================="
+
+          # Write rich markdown summary directly into GitHub Actions step summary
+          cat <<EOF >> $GITHUB_STEP_SUMMARY
+          ## 🚀 Deployment Successful!
+
+          Your serverless React portfolio has been compiled and deployed directly to **Amazon S3**.
+
+          ### 🌐 Live Website Access
+          - **Direct Website URL**: [${WEBSITE_URL}](${WEBSITE_URL})
+          - **AWS Bucket**: \`${{ env.S3_BUCKET_NAME }}\`
+          - **AWS Region**: \`${BUCKET_REGION}\`
+          - **Commit**: \`${{ github.sha }}\`
+          - **Deployed At**: \`$(date -u +"%Y-%m-%d %H:%M:%S UTC")\`
+
+          👉 **[Click Here to Open Live Portfolio](${WEBSITE_URL})**
+          EOF
 
       - name: Invalidate CloudFront Cache (Optional)
         run: |
@@ -54,5 +94,5 @@ jobs:
             echo "Invalidating CloudFront Distribution ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }}..."
             aws cloudfront create-invalidation --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }} --paths "/*"
           else
-            echo "CLOUDFRONT_DISTRIBUTION_ID secret not set. Skipping cache invalidation."
+            echo "CLOUDFRONT_DISTRIBUTION_ID secret not configured. Skipping CDN invalidation."
           fi
