@@ -29,8 +29,13 @@ phases:
 
   post_build:
     commands:
-      - echo "===> Stage: CloudFront Edge Cache Invalidation"
-      - echo "CloudFront Distribution ID: $CLOUDFRONT_DIST_ID"
-      - INVALIDATION_ID=$(aws cloudfront create-invalidation --distribution-id $CLOUDFRONT_DIST_ID --paths "/*" --query 'Invalidation.Id' --output text)
-      - echo "CloudFront invalidation successfully submitted. Invalidation ID: $INVALIDATION_ID"
+      - echo "===> Stage: Post-Build / Cache Invalidation"
+      - |
+        if [ -n "$CLOUDFRONT_DIST_ID" ] && [ "$CLOUDFRONT_DIST_ID" != "NONE" ]; then
+          echo "CloudFront Distribution ID: $CLOUDFRONT_DIST_ID"
+          INVALIDATION_ID=$(aws cloudfront create-invalidation --distribution-id $CLOUDFRONT_DIST_ID --paths "/*" --query 'Invalidation.Id' --output text)
+          echo "CloudFront invalidation successfully submitted. Invalidation ID: $INVALIDATION_ID"
+        else
+          echo "CloudFront Distribution ID not configured or pending verification. Skipping CDN cache invalidation."
+        fi
       - echo "===> React Serverless Continuous Deployment Pipeline Execution Succeeded!"
